@@ -1,12 +1,13 @@
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.List;
+import java.io.*;
+import java.net.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.security.*;
+import java.sql.*;
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 class User {
     private String username;
     private String password;
@@ -203,13 +204,58 @@ class Logger {
     // private constructor and public static getInstance() method to implement the singleton pattern
 }
 
-/* Name: Final
+
+/* Name: BananaServer
  * Description: The main class for running the site
  * Parameters: none
  * Relationships: none
  */
-public class Final{
+public class BananaServer {
+    private static final int PORT = 8080;
+
     public static void main(String[] args) {
-        
+        ExecutorService executorService = Executors.newFixedThreadPool(10);
+
+        try (ServerSocket serverSocket = new ServerSocket(PORT)) {
+            System.out.println("Server is listening on port " + PORT);
+
+            while (true) {
+                Socket socket = serverSocket.accept();
+                System.out.println("New client connected");
+
+                executorService.execute(new ClientHandler(socket));
+            }
+        } catch (IOException ex) {
+            System.out.println("Server exception: " + ex.getMessage());
+            ex.printStackTrace();
+        }
+    }
+}
+
+class ClientHandler implements Runnable {
+    private Socket socket;
+
+    public ClientHandler(Socket socket) {
+        this.socket = socket;
+    }
+
+    @Override
+    public void run() {
+        try {
+            // Read the HTML file into a String
+            String html = new String(Files.readAllBytes(Paths.get("index.html")));
+
+            // Send an HTTP response with the HTML content
+            OutputStream output = socket.getOutputStream();
+            PrintWriter writer = new PrintWriter(output, true);
+
+            writer.println("HTTP/1.1 200 OK");
+            writer.println("Content-Type: text/html");
+            writer.println("\r\n");
+            writer.println(html);
+        } catch (IOException ex) {
+            System.out.println("Server exception: " + ex.getMessage());
+            ex.printStackTrace();
+        }
     }
 }

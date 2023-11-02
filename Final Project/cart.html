@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Shopping Cart</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fffacd; /* LemonChiffon color for a light yellow background */
+            color: #8b4513; /* SaddleBrown color for a contrast with the background */
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .cart-items {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            border-top: 1px solid #8b4513;
+            border-bottom: 1px solid #8b4513;
+        }
+        .cart-item {
+            border: 1px solid #8b4513;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #fff8dc; /* Cornsilk color for a slightly different yellow */
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar" style="background-color: #FFD700; overflow: hidden; padding: 20px;">
+        <a href="index.html" style="float: left; display: block; color: black; text-align: center; padding: 14px 16px; text-decoration: none; font-size: 17px;">Home</a>
+        <a href="products.html" style="float: left; display: block; color: black; text-align: center; padding: 14px 16px; text-decoration: none; font-size: 17px;">Products</a>
+        <a href="about.html" style="float: left; display: block; color: black; text-align: center; padding: 14px 16px; text-decoration: none; font-size: 17px;">About</a>
+        <a href="cart.html" class="cart" style="float: right; display: block; color: black; text-align: center; padding: 14px 16px; text-decoration: none; font-size: 17px;">Cart</a>
+        <a href="login.html" class="login" style="float: right; display: block; color: black; text-align: center; padding: 14px 16px; text-decoration: none; font-size: 17px;">Login</a>
+    </div>
+    <h1>Your Shopping Cart</h1>
+    <ul id="cart-items" class="cart-items">
+        <!-- Cart items will be added here -->
+    </ul>
+
+    <script>
+        // Example cart items
+        var cartItems = [
+            'Banana Bread',
+            'Banana Smoothie',
+            'Banana Pie'
+        ];
+
+        // Get the cart items element
+        var cartItemsElement = document.getElementById('cart-items');
+
+        // Add each cart item to the cart items element
+        for (var i = 0; i < cartItems.length; i++) {
+            var listItem = document.createElement('li');
+            listItem.textContent = cartItems[i];
+            listItem.className = 'cart-item';
+            cartItemsElement.appendChild(listItem);
+        }
+    </script>
+</body>
+</html>
