@@ -22,6 +22,20 @@ class Cart {
 class UserAuthenticator {
     private UserRepository userRepository;
     // methods to log in and log out users
+    public UserAuthenticator(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    private byte[] hashPassword(String password) {
+        // implementation of hashPassword
+    }
+    private byte[] generateSalt() {
+        // implementation of generateSalt
+    }
+
+    public boolean login(String username, String password) {
+        // implementation of login
+    }
 }
 
 class ProductCatalog {
