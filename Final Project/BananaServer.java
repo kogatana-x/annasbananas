@@ -200,8 +200,19 @@ class PaymentProcessor {
  */
 class Logger {
     private static Logger instance;
-    // methods to log events and transactions
-    // private constructor and public static getInstance() method to implement the singleton pattern
+
+    private Logger() {}
+
+    public static synchronized Logger getInstance() {
+        if (instance == null) {
+            instance = new Logger();
+        }
+        return instance;
+    }
+
+    public void log(String sourceIP, int sourcePort, String path) {
+        System.out.println("Request from " + sourceIP + ":" + sourcePort + " for " + path);
+    }
 }
 
 
@@ -221,7 +232,7 @@ public class BananaServer {
 
             while (true) {
                 Socket socket = serverSocket.accept();
-                System.out.println("New client connected");
+                //System.out.println("New client connected");
 
                 executorService.execute(new ClientHandler(socket));
             }
@@ -238,7 +249,22 @@ class ClientHandler implements Runnable {
     public ClientHandler(Socket socket) {
         this.socket = socket;
     }
-
+    private String getSourceInfo(Socket socket){
+        String ip = socket.getInetAddress().getHostAddress();
+        int port = socket.getPort();
+        return ip + ":" + port;
+    }
+    private String getRequestInfo(BufferedReader reader) throws IOException{
+        String line = reader.readLine();
+        if (line == null) {
+            return null;
+        }
+        String[] parts = line.split(" ");
+        if (parts.length < 2) {
+            return null;
+        }
+        return parts[1];
+    }
     @Override
     public void run() {
         try {
