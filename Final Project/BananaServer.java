@@ -243,7 +243,7 @@ class ClientHandler implements Runnable {
     public void run() {
         try {
             // Read the HTML file into a String
-            String html = new String(Files.readAllBytes(Paths.get("index.html")));
+            String html = new String(Files.readAllBytes(Paths.get("html/index.html")));
 
             // Send an HTTP response with the HTML content
             OutputStream output = socket.getOutputStream();
