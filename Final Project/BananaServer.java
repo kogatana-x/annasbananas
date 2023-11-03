@@ -242,17 +242,72 @@ class ClientHandler implements Runnable {
     @Override
     public void run() {
         try {
-            // Read the HTML file into a String
-            String html = new String(Files.readAllBytes(Paths.get("html/index.html")));
+            // Read the first line of the HTTP request
+            BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            String line = reader.readLine();
+            if (line == null) {
+                return;
+            }
 
-            // Send an HTTP response with the HTML content
+            // Parse the requested path from the first line
+            String[] parts = line.split(" ");
+            if (parts.length < 2) {
+                return;
+            }
+            String path = parts[1];
+
+            // Map the requested path to a file
+            String filename;
+            String mimeType;
+            if (path.equals("/products.html")) {
+                filename = "products.html";
+                mimeType = "text/html";
+            } else if (path.equals("/cart.html")) {
+                filename = "cart.html";
+                mimeType = "text/html";
+            } else if (path.equals("/login.html")) {
+                filename = "login.html";
+                mimeType = "text/html";
+            } else if (path.equals("/about.html")) {
+                filename = "about.html";
+                mimeType = "text/html";
+            } else if (path.equals("/register.html")) {
+                filename = "register.html";
+                mimeType = "text/html";
+            } else if (path.endsWith(".css")) {
+                filename = path.substring(1);  // remove the leading '/'
+                mimeType = "text/css";
+            } else if (path.endsWith(".js")) {
+                filename = path.substring(1);  // remove the leading '/'
+                mimeType = "application/javascript";
+            } else if (path.endsWith(".jpg") || path.endsWith(".jpeg")) {
+                filename = path.substring(1);  // remove the leading '/'
+                mimeType = "image/jpeg";
+            }else {
+                filename = "index.html";
+                mimeType = "text/html";
+            }
+
+            boolean isBinary = mimeType.startsWith("image/");
+
+            // Read the file into a byte array
+            byte[] fileBytes = Files.readAllBytes(Paths.get("html/" + filename));
+
+            // Send an HTTP response with the content
             OutputStream output = socket.getOutputStream();
-            PrintWriter writer = new PrintWriter(output, true);
+            output.write(("HTTP/1.1 200 OK\r\nContent-Type: " + mimeType + "\r\n\r\n").getBytes());
 
-            writer.println("HTTP/1.1 200 OK");
-            writer.println("Content-Type: text/html");
-            writer.println("\r\n");
-            writer.println(html);
+            if (isBinary) {
+                // Write the binary data directly to the output
+                output.write(fileBytes);
+            } else {
+                // Convert the byte array to a string and write it to the output
+                PrintWriter writer = new PrintWriter(output, true);
+                writer.println(new String(fileBytes));
+            }
+
+            output.close();
+            
         } catch (IOException ex) {
             System.out.println("Server exception: " + ex.getMessage());
             ex.printStackTrace();
