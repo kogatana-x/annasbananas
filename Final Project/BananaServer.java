@@ -96,6 +96,9 @@ class ClientHandler implements Runnable {
             } else if (path.equals("/register.html")) {
                 filename = "register.html";
                 mimeType = "text/html";
+           } else if (path.equals("/payments.html")) {
+                filename = "payments.html";
+                mimeType = "text/html";
             } else if (path.endsWith(".css")) {
                 filename = path.substring(1);  // remove the leading '/'
                 mimeType = "text/css";
