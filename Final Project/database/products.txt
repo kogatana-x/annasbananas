@@ -1,0 +1,4 @@
+id, name, description, price, unit, quantity, image
+0, Banana 1, An underripe banana. Might wanna wait a bit..., 5.0, USD, 999, banana1.jpg
+1, Banana 2, A perfectly ripe banana. Great for eating., 10.0, USD, 999, banana2.jpg
+2, Banana 3, An overripe banana. Good for baking., 2.0, USD, 999, banana3.jpg
