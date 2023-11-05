@@ -52,9 +52,11 @@
     </style>
 </head>
 <body>
-    <h1>Payment Processing</h1>
+    <h1>Anna's Bananas Purchase Order</h1>
+     <p>Please enter your payment information below so we can process your order.
+     <br>Enter at your own risk as our engineers arent paid enough (or at all) to implement encryption</p>
     <p id="totalCost"></p>
-    <form action="/submitPayment" method="post">
+    <form action="/payments" method="POST">
         <label for="name">Name:</label><br>
         <input type="text" id="name" name="name" required><br>
         <label for="cardNumber">Card Number:</label><br>

@@ -36,6 +36,28 @@
             background-color: #fff8dc; /* Cornsilk color for a slightly different yellow */
             text-align: center;
         }
+    .banana-button {
+        background: #FFD700;
+        color: white;
+       /* border-radius: 50px;*/
+        padding: 10px 30px;
+        font-size: 15px;
+        border: none;
+        cursor: pointer;
+        margin: 10px 20px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        transition: all 0.3s ease-out;
+    }
+    .banana {
+        display: flex;
+        flex-direction: row;
+        margin: 20px auto;
+        justify-content: center;
+        align-items: center;
+    }
+    .banana-button:hover {
+        transform: scale(1.05);
+    }
     </style>
 </head>
 <body>
@@ -46,12 +68,15 @@
         <a href="cart.html" class="cart" style="float: right; display: block; color: black; text-align: center; padding: 14px 16px; text-decoration: none; font-size: 17px;">Cart</a>
         <a href="login.html" class="login" style="float: right; display: block; color: black; text-align: center; padding: 14px 16px; text-decoration: none; font-size: 17px;">Login</a>
     </div>
-    <h1>Your Shopping Cart</h1>
-    <button onclick="location.href='payments.html'" type="button">Checkout</button>
-    <button onclick="location.href='products.html'" type="button">Continue Shopping</button>
-    <ul id="cart-items" class="cart-items">
-        <!-- Cart items will be added here -->
-    </ul>
+        <h1>Your Shopping Cart</h1>
+        <div class="banana">
+            <button class="banana-button" onclick="location.href='payments.html'" type="button">Checkout</button>
+            <button class="banana-button" onclick="location.href='products.html'" type="button">Continue Shopping</button>
+        </div>
+        <ul id="cart-items" class="cart-items">
+            <!-- Cart items will be added here -->
+        </ul>
+        
 
     <script>
         // Example cart items
