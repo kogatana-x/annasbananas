@@ -1,23 +1,37 @@
 public class User {
+    private int uid;
     private String username;
-    private String password;
+    private String hash;
+    private String salt;
+
     private Cart cart;
+
+
+    public User(int uid,String username, String hash, String salt) {
+        this.uid=uid;
+        this.username = username;
+        this.hash = hash;
+        this.salt = salt;
+    }
     // getters and setters
     public byte[] getHash() {
-        return null;
-    }
-    public byte[] getSalt() {
-        return null;
+        return this.hash.getBytes();
     }
     public String getUsername() {
-        return null;
+        return this.username;
     }
-    public void setId(String string) {
+
+    public byte[] getSalt() {
+        return this.salt.getBytes();
     }
-    public void setUsername(String string) {
+    public int getUid() {
+        return this.uid;
     }
-    public void setPassword(byte[] bytes) {
+
+    public void setCart(Cart cart) {
+        this.cart = cart;
     }
-    public void setSalt(byte[] bytes) {
+    public Cart getCart() {
+        return this.cart;
     }
 }

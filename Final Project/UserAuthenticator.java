@@ -10,11 +10,12 @@ import java.security.SecureRandom;
 import java.util.Arrays;
 
 class UserAuthenticator {
-    private UserRepository userRepository;
+    public UserRepository userRepository;
 
     public UserAuthenticator(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
+
 
     /* Name: hashPassword
      * Description: Hashes a password with a salt
@@ -22,7 +23,7 @@ class UserAuthenticator {
      *             salt - the salt to use
      * Returns: the hashed password
      */
-    private byte[] hashPassword(String password, byte[] salt) { //TODO client should do this lol
+    public byte[] hashPassword(String password, byte[] salt) { 
         MessageDigest md = null;
         try {
             md = MessageDigest.getInstance("SHA-512");
@@ -38,7 +39,7 @@ class UserAuthenticator {
      * Parameters: none
      * Returns: the salt
      */
-    private byte[] generateSalt() {
+    public byte[] generateSalt() {
         SecureRandom random = new SecureRandom();
         byte[] salt = new byte[16];
         random.nextBytes(salt);

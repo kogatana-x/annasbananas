@@ -106,15 +106,19 @@ class ClientHandler implements Runnable {
                     }
                 }
                 System.out.println("Login attempt from " + getSourceInfo(socket) + " with username " + username);
-                // Save the username and password
-                // TODO: Implement this
-
-                return;
+                // Authenticate the user
+                filename="index.html";
+                UserAuthenticator authenticator = new UserAuthenticator(new UserRepository());
+                byte[] salt = authenticator.generateSalt();
+                User user = authenticator.userRepository.getUser(username);
+                boolean result=false;
+                if(user!=null){result=authenticator.login(username, password); }
+                //TODO otherwise say bad username or password
+                //set session token
             }
             else if(method.equals("POST")&&path.equals("/register")){
                 String username = null;
                 String password = null;
-                String password2 = null;
 
                 // Read the headers and the blank line
                 while (!(line = reader.readLine()).equals("")) {}
@@ -133,12 +137,16 @@ class ClientHandler implements Runnable {
                         } else if (parts[0].equals("password")) {
                             password = URLDecoder.decode(parts[1], StandardCharsets.UTF_8.name());
                         }
-                    }
-                System.out.println("Register attempt from " + getSourceInfo(socket) + " with username " + username);
+                    }             
+                }
+                System.out.println("Registering user "+username+ " from "+getSourceInfo(socket));
                 // Save the username and password
                 filename="finished-registration.html";
-
-            }
+                UserAuthenticator authenticator = new UserAuthenticator(new UserRepository());
+                byte[] salt = authenticator.generateSalt();
+                String hash=authenticator.hashPassword(password, salt).toString();
+                User user = new User(0,username, hash, salt.toString());
+                authenticator.userRepository.saveUser(user); 
         }
             else if (method.equals("POST") && path.equals("/payments")){
                 String cardNumber = null;
@@ -177,8 +185,33 @@ class ClientHandler implements Runnable {
                 filename="finished-registration.html";
             }
             
-            // Map the requested path to a file
+            // If the path starts with "/search", parse the query parameters
+            else if (path.startsWith("/search")) {
+                String query = null;
 
+                // Check if there are query parameters
+                int questionMarkIndex = path.indexOf("?");
+                if (questionMarkIndex != -1) {
+                    // Get the query parameters
+                    String queryParams = path.substring(questionMarkIndex + 1);
+
+                    // Split the parameters by "&"
+                    String[] pairs = queryParams.split("&");
+                    for (String pair : pairs) {
+                        // Split the name and value by "="
+                        String[] stuff = pair.split("=");
+                        if (stuff.length == 2) {
+                            // Check if the name is "query"
+                            if (stuff[0].equals("query")) {
+                                query = URLDecoder.decode(stuff[1], StandardCharsets.UTF_8.name());
+                            }
+                        }
+                    System.out.println(query);
+                    }
+                }
+            }
+
+            // Map the requested path to a file
             if(filename.equals("garbage")){
                 if (path.endsWith(".html")) {
                     filename = path.substring(1);  // remove the leading '/'    

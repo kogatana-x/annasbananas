@@ -1,1 +1,5 @@
-id, username, pwhash, salt
+id, username, pwhash, salt1, test
+
+1, 0,test,[B@2ee4b340,[B@7292e83a
+1, 0,test,[B@45662b89,[B@6f327a06
+1, 0,test,[B@45d7e486,[B@d57258
