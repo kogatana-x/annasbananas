@@ -1,18 +1,30 @@
 public class User {
-    private int uid;
     private String username;
     private String hash;
     private String salt;
+    private String firstname;
+    private String lastname;
+    int counter=0;
+    private String skey;
 
-    private Cart cart;
 
-
-    public User(int uid,String username, String hash, String salt) {
-        this.uid=uid;
+    public User(String username, String hash, String salt, String firstname, String lastname) {
         this.username = username;
         this.hash = hash;
         this.salt = salt;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        newCart();
     }
+    public User(String username, String hash, String salt, String firstname, String lastname, String skey) {
+        this.username = username;
+        this.hash = hash;
+        this.salt = salt;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.skey=skey;
+    }
+    
     // getters and setters
     public byte[] getHash() {
         return this.hash.getBytes();
@@ -20,18 +32,23 @@ public class User {
     public String getUsername() {
         return this.username;
     }
-
+    public String getFirstname(){
+        return this.firstname;
+    }
+    public String getLastname(){
+        return this.lastname;
+    }
     public byte[] getSalt() {
         return this.salt.getBytes();
     }
-    public int getUid() {
-        return this.uid;
+    public void setSalt(byte[] salt){
+        this.salt=salt.toString();
     }
 
-    public void setCart(Cart cart) {
-        this.cart = cart;
+    public void newCart() {
+        this.skey = this.username+(this.counter+1);
     }
-    public Cart getCart() {
-        return this.cart;
+    public String getCart() {
+        return this.skey;
     }
 }

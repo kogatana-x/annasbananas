@@ -105,4 +105,16 @@ public class HTMLParser{
         return this.path;
     }
     
+    public boolean sendHTMLheader(){
+        boolean result=false;
+        return result;
+    }
+
+    public void setCookie(User user){
+        // Set a cookie with the session key
+        String response = "HTTP/1.1 200 OK\r\n" +
+                        "Set-Cookie: session=" + user.getCart() + "\r\n" +
+                        "\r\n";
+        output.write(response.getBytes(StandardCharsets.UTF_8));
+    }
 }

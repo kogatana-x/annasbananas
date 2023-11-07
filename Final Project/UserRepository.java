@@ -21,13 +21,14 @@ class UserRepository {
         User rez = getUser(user.getUsername());
         if(rez==null){
             Database UserDatabase = new Database("users.txt");
-            String row=user.getUid()+","+user.getUsername()+","+user.getHash()+","+user.getSalt();
+            String row=user.getUsername()+","+user.getHash()+","+user.getSalt()+","+user.getFirstname()+","+user.getLastname()+","+user.getCart();
             UserDatabase.add(row);
             return true;
         }
         return false;
     }
 
+    
     /* Name: getUser
      * Description: Retrieves a user from the database
      * Parameters: username - the username of the user to retrieve
@@ -38,9 +39,9 @@ class UserRepository {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
-                if (parts.length >= 2 && parts[1].equals(username)) {
+                if (parts.length >= 2 && parts[0].equals(username)) {
                     // Found the user, return the index
-                    return new User(Integer.parseInt(parts[0]), parts[1],parts[3],parts[4]);
+                    return new User(parts[0], parts[1], parts[2], parts[3], parts[4],parts[5]);
                 }
             }
         } catch (IOException e) {

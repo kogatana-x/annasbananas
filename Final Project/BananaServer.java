@@ -77,168 +77,89 @@ class ClientHandler implements Runnable {
         String filename="garbage";
         String mimeType = "text/html";
 
-        User user;
         boolean result=false;
 
-        if(method.equals("POST")&&path.equals("/login")){
+        if(method.equals("POST")&&path.equals("/register")){
             int count=0;
-            String username,password;
+            String username="",password="",firstname="",lastname="";
             for (String value : values) {
                 if (value.equals("username")) {
-                    username = URLDecoder.decode(values[count+1], StandardCharsets.UTF_8.name());
+                    username = values[count++];
                 } else if (value.equals("password")) {
-                    password = URLDecoder.decode(values[count+1], StandardCharsets.UTF_8.name());
+                    password = values[count++];
+                } else if (value.equals("firstname")) {
+                    firstname = values[count++];
+                } else if (value.equals("lastname")) {
+                    lastname = values[count++];
                 }
                 count++;
            }
            UserAuthenticator authenticator = new UserAuthenticator(new UserRepository());
+           result=authenticator.register(username,password,firstname,lastname);
+           String res;
+           if(result){res="success";}else{res="failure";}
+           System.out.println("Registration attempt "+res+" from " + getSourceInfo(socket) + " with username " + username);
+           filename="finished-registration.html"; //TODO add a page for failed login and update username if logged in
+           //NOTE: does not auto-login with new user account
+        } 
+        
+        else if(method.equals("POST")&&path.equals("/login")){
+            int count=0;
+            String username="",password="";
+            for (String value : values) {
+                if (value.equals("username")) {
+                    username = values[count++];
+                } else if (value.equals("password")) {
+                    password = values[count++];
+                }
+                count++;
+           }
+           UserAuthenticator authenticator = new UserAuthenticator(new UserRepository());
+           String res;
            result=authenticator.login(username, password);
-           System.out.println("Login attempt "+result+" from " + getSourceInfo(socket) + " with username " + username);
+           if(result){res="success";}else{res="failure";}
+           System.out.println("Login attempt "+res+" from " + getSourceInfo(socket) + " with username " + username);
+        
+           filename="index.html"; //TODO add a page for failed login and update username if logged in
 
-        }
-                // Authenticate the user
-                filename="index.html";
-                UserAuthenticator authenticator = new UserAuthenticator(new UserRepository());
-                byte[] salt = authenticator.generateSalt();
-                User user = authenticator.userRepository.getUser(username);
-                boolean result=false;
-                if(user!=null){result=authenticator.login(username, password); }
-                //TODO otherwise say bad username or password
-                //set session token
-
-        } else if(method.equals("POST")&&path.equals("/register")){
-
-        } else if(method.equals("POST")&&path.equals("/payments")){
-
-        } else if(path.startsWith("/search")){
+        } 
+        
+        else if(method.equals("POST")&&path.equals("/payments")){
+            String cardNumber = "";
+            String cardName = "";
+            String cardExpiry = "";
+            String cardCVC = "";
+            String cardZip = "";
+            int count=0;
+            for (String value : values) {
+                if (value.equals("cardNumber")) {
+                    cardNumber = values[count++];
+                } else if (value.equals("cardName")) {
+                    cardName = values[count++];
+                } else if (value.equals("cardExpiry")) {
+                    cardExpiry = values[count++];
+                } else if (value.equals("cardCVC")) {
+                    cardCVC = values[count++];
+                } else if (value.equals("cardZip")) {
+                    cardZip = values[count++];
+                }
+                count++;
+            }
+                
+                System.out.println("Payment attempt from " + getSourceInfo(socket) + " with card number " + cardNumber);
+                // Save the payment into into the db
+                
+                filename="finished-registration.html";
+        } 
+        
+        else if(path.startsWith("/search")){
 
         }
 
 
     }
-  /*  
-    @Override
-    public void run() {
-        try {
-            // Read the first line of the HTTP request
-            BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            String line = reader.readLine();
-            if (line == null) {return;}
+/*
 
-            // Parse the requested path from the first line
-            String[] parts = line.split(" ");
-            if (parts.length < 2) {
-                return;
-            }
-            String method = parts[0];
-            String path = parts[1];
-            String filename="garbage";
-            String mimeType = "text/html";
-
-            // If the method is POST and the path is "/login", parse the request body
-            if (method.equals("POST") && path.equals("/login")) {
-                String username = null;
-                String password = null;
-
-                // Read the headers and the blank line
-                while (!(line = reader.readLine()).equals("")) {}
-
-                // Read the request body
-                StringBuilder requestBody = new StringBuilder();
-                while (reader.ready()) {
-                    requestBody.append((char) reader.read());
-                }
-                String[] pairs = requestBody.toString().split("&");
-                for (String pair : pairs) {
-                    parts = pair.split("=");
-                    if (parts.length == 2) {
-                        if (parts[0].equals("username")) {
-                            username = URLDecoder.decode(parts[1], StandardCharsets.UTF_8.name());
-                        } else if (parts[0].equals("password")) {
-                            password = URLDecoder.decode(parts[1], StandardCharsets.UTF_8.name());
-                        }
-                    }
-                }
-                System.out.println("Login attempt from " + getSourceInfo(socket) + " with username " + username);
-                // Authenticate the user
-                filename="index.html";
-                UserAuthenticator authenticator = new UserAuthenticator(new UserRepository());
-                byte[] salt = authenticator.generateSalt();
-                User user = authenticator.userRepository.getUser(username);
-                boolean result=false;
-                if(user!=null){result=authenticator.login(username, password); }
-                //TODO otherwise say bad username or password
-                //set session token
-            }
-            else if(method.equals("POST")&&path.equals("/register")){
-                String username = null;
-                String password = null;
-
-                // Read the headers and the blank line
-                while (!(line = reader.readLine()).equals("")) {}
-
-                // Read the request body
-                StringBuilder requestBody = new StringBuilder();
-                while (reader.ready()) {
-                    requestBody.append((char) reader.read());
-                }
-                String[] pairs = requestBody.toString().split("&");
-                for (String pair : pairs) {
-                    parts = pair.split("=");
-                    if (parts.length == 2) {
-                        if (parts[0].equals("username")) {
-                            username = URLDecoder.decode(parts[1], StandardCharsets.UTF_8.name());
-                        } else if (parts[0].equals("password")) {
-                            password = URLDecoder.decode(parts[1], StandardCharsets.UTF_8.name());
-                        }
-                    }             
-                }
-                System.out.println("Registering user "+username+ " from "+getSourceInfo(socket));
-                // Save the username and password
-                filename="finished-registration.html";
-                UserAuthenticator authenticator = new UserAuthenticator(new UserRepository());
-                byte[] salt = authenticator.generateSalt();
-                String hash=authenticator.hashPassword(password, salt).toString();
-                User user = new User(0,username, hash, salt.toString());
-                authenticator.userRepository.saveUser(user); 
-        }
-            else if (method.equals("POST") && path.equals("/payments")){
-                String cardNumber = null;
-                String cardName = null;
-                String cardExpiry = null;
-                String cardCVC = null;
-                String cardZip = null;
-
-                // Read the headers and the blank line
-                while (!(line = reader.readLine()).equals("")) {}
-
-                // Read the request body
-                StringBuilder requestBody = new StringBuilder();
-                while (reader.ready()) {
-                    requestBody.append((char) reader.read());
-                }
-                String[] pairs = requestBody.toString().split("&");
-                for (String pair : pairs) {
-                    parts = pair.split("=");
-                    if (parts.length == 2) {
-                        if (parts[0].equals("cardNumber")) {
-                            cardNumber = URLDecoder.decode(parts[1], StandardCharsets.UTF_8.name());
-                        } else if (parts[0].equals("cardName")) {
-                            cardName = URLDecoder.decode(parts[1], StandardCharsets.UTF_8.name());
-                        } else if (parts[0].equals("cardExpiry")) {
-                            cardExpiry = URLDecoder.decode(parts[1], StandardCharsets.UTF_8.name());
-                        } else if (parts[0].equals("cardCVC")) {
-                            cardCVC = URLDecoder.decode(parts[1], StandardCharsets.UTF_8.name());
-                        } else if (parts[0].equals("cardZip")) {
-                            cardZip = URLDecoder.decode(parts[1], StandardCharsets.UTF_8.name());
-                        }
-                    }
-                }
-                System.out.println("Payment attempt from " + getSourceInfo(socket) + " with card number " + cardNumber);
-                // Save the payment into into the db
-                filename="finished-registration.html";
-            }
-            
             // If the path starts with "/search", parse the query parameters
             else if (path.startsWith("/search")) {
                 String query = null;
