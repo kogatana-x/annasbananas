@@ -1,1 +1,1 @@
-id, date, time, srcip, srcport, request
+date, time, srcip, srcport, request

@@ -9,6 +9,7 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -21,6 +22,7 @@ import java.util.concurrent.Executors;
 
 public class BananaServer {
     private static final int PORT = 8080;
+    public HashMap<String,User> Sessions = new HashMap<String, User>(); //TODO definitley a security risk but i give no fucks right now
 
     public static void main(String[] args) {
         ExecutorService executorService = Executors.newFixedThreadPool(10);
@@ -63,6 +65,58 @@ class ClientHandler implements Runnable {
         }
         return parts[1];
     }
+   
+    @Override
+    public void run(){
+
+        HTMLParser parser = new HTMLParser(socket);
+        String[] values=parser.getValues();
+        String method=parser.getMethod();
+        String path=parser.getPath();
+
+        String filename="garbage";
+        String mimeType = "text/html";
+
+        User user;
+        boolean result=false;
+
+        if(method.equals("POST")&&path.equals("/login")){
+            int count=0;
+            String username,password;
+            for (String value : values) {
+                if (value.equals("username")) {
+                    username = URLDecoder.decode(values[count+1], StandardCharsets.UTF_8.name());
+                } else if (value.equals("password")) {
+                    password = URLDecoder.decode(values[count+1], StandardCharsets.UTF_8.name());
+                }
+                count++;
+           }
+           UserAuthenticator authenticator = new UserAuthenticator(new UserRepository());
+           result=authenticator.login(username, password);
+           System.out.println("Login attempt "+result+" from " + getSourceInfo(socket) + " with username " + username);
+
+        }
+                // Authenticate the user
+                filename="index.html";
+                UserAuthenticator authenticator = new UserAuthenticator(new UserRepository());
+                byte[] salt = authenticator.generateSalt();
+                User user = authenticator.userRepository.getUser(username);
+                boolean result=false;
+                if(user!=null){result=authenticator.login(username, password); }
+                //TODO otherwise say bad username or password
+                //set session token
+
+        } else if(method.equals("POST")&&path.equals("/register")){
+
+        } else if(method.equals("POST")&&path.equals("/payments")){
+
+        } else if(path.startsWith("/search")){
+
+        }
+
+
+    }
+  /*  
     @Override
     public void run() {
         try {
@@ -214,16 +268,16 @@ class ClientHandler implements Runnable {
             // Map the requested path to a file
             if(filename.equals("garbage")){
                 if (path.endsWith(".html")) {
-                    filename = path.substring(1);  // remove the leading '/'    
+                    filename = path.substring(1);    
                     mimeType = "text/html";
                 } else if (path.endsWith(".css")) {
-                    filename = path.substring(1);  // remove the leading '/'
+                    filename = path.substring(1); 
                     mimeType = "text/css";
                 } else if (path.endsWith(".js")) {
-                    filename = path.substring(1);  // remove the leading '/'
+                    filename = path.substring(1);  
                     mimeType = "application/javascript";
                 } else if (path.endsWith(".jpg") || path.endsWith(".jpeg")) {
-                    filename = path.substring(1);  // remove the leading '/'
+                    filename = path.substring(1); 
                     mimeType = "image/jpeg";
                 } else {
                     filename="index.html";
@@ -254,5 +308,8 @@ class ClientHandler implements Runnable {
             System.out.println("Server exception: " + ex.getMessage());
             ex.printStackTrace();
         }
-    }
+    }*/
 }
+
+
+

@@ -59,6 +59,8 @@ class UserAuthenticator {
         byte[] saltedHash = hashPassword(hash, user.getSalt());
         return Arrays.equals(saltedHash, user.getHash());
     }
+
+   
 }
 
 

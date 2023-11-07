@@ -1,1 +1,1 @@
-id, total, usernameid, cartid, paymentid, addressid, status
+skey, username, paymentid, addressid, total, status

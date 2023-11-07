@@ -1,1 +1,1 @@
-id, usernameid, street1, street2, city, state, zip, country
+username, street1, street2, city, state, zip, country

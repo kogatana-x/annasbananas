@@ -1,0 +1,1 @@
+skey/cartid, status, item1, quantitiy1, item2, quantity2, item3, quantitiy3, etc.
