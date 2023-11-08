@@ -13,8 +13,11 @@ public class HTMLParser{
     private Socket socket;
     private String method;
     private String path;
+    private String cookie;
+    private OutputStream output;
     private BufferedReader reader;
     private String line;
+    public String[] values;
     
     public HTMLParser(Socket socket){
         this.socket=socket;
@@ -33,26 +36,41 @@ public class HTMLParser{
         String[] parts={""};
 
         if (line == null) {return null;}
-
+        else if (line.startsWith("Cookie:")) {
+            // Extract the cookie value
+            parts = line.split(":");
+            if (parts.length > 1) {
+                String cookies = parts[1].trim();
+                for (String cookie : cookies.split(";")) {
+                    if (cookie.startsWith("session=")) {
+                        this.cookie = cookie.split("=")[1];
+                        break;
+                    }
+                }
+            }
+        }
         // Parse the requested path from the first line
-        parts = line.split(" ");
-        if (parts.length < 2) {
-            return null;
+        else{
+            parts = line.split(" ");
+            if (parts.length < 2) {
+                return null;
+            }
         }
 
         return parts;
     }
     
     //STEP 2 - Extract Method + Request Path
-    private void parseRawStrings(){
+    public void parseRawStrings(){
         String[] parts=parseRaw();
         this.method = parts[0];
         this.path = parts[1];
+        
     }
 
     //STEP 3 - Extract Request Parameters
     private String[] parseRawParameters(){
-        parseRawStrings();
+        //parseRawStrings();
 
         // Read the headers and the blank line
        try{
@@ -73,27 +91,33 @@ public class HTMLParser{
     }
     
     //STEP 4 - Decode Values
-    public String[] getValues(){
+    public void getValues(){
         String[] pairs=parseRawParameters();
-        String[] parts={""};
-        String[] temp={""};
-        int x=0;
+        int len = pairs.length*2;
 
+        String[] parts=new String[len*2];
+        String[] temp=new String[len];
+
+        int x=0;
         for (String pair : pairs) {
             temp = pair.split("="); //TODO "&"
             for(String part:temp){
-                try{
-                    parts[x]= URLDecoder.decode(part, StandardCharsets.UTF_8.name());
-                    x++;
-                } catch (IOException ex) {}                
+                if(!part.equals("=")){
+                    try{
+                        parts[x]= URLDecoder.decode(part, StandardCharsets.UTF_8.name());
+                        x++;
+                    } catch (IOException ex) {} 
+                }               
             }
         }
-        print(parts); //TODO DEBUG/REMOVE
-        return parts;
+        //print(parts); //TODO DEBUG/REMOVE
+        this.values=parts;
+        
     }
     public void print(String[] parts){
         for(int x=0;x<parts.length;x++){
-           if(x%2==0){System.out.print(parts[x]+"=");} 
+           if(parts[x]==null){return;}
+            else if(x%2==0){System.out.print(parts[x]+"=");} 
            else{System.out.println(parts[x]);}
         }
     }
@@ -110,11 +134,20 @@ public class HTMLParser{
         return result;
     }
 
+    public String getCookie(){
+        return this.cookie;
+    }
     public void setCookie(User user){
         // Set a cookie with the session key
         String response = "HTTP/1.1 200 OK\r\n" +
                         "Set-Cookie: session=" + user.getCart() + "\r\n" +
                         "\r\n";
-        output.write(response.getBytes(StandardCharsets.UTF_8));
+        try{
+            output.write(response.getBytes(StandardCharsets.UTF_8));
+        }
+        catch(IOException ex){
+            System.out.println("Server exception: " + ex.getMessage());
+            ex.printStackTrace();
+        }
     }
 }

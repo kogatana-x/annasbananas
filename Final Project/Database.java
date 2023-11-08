@@ -4,12 +4,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class Database {
-    public int id=0; //ID of the next item to add to the database. Will start with 1
     public String filepath="database/"; //name of the database file
 
     public Database(String filepath) {
         this.filepath+=filepath;
-        this.id++;
     }
 
     /* Name: add
@@ -20,7 +18,7 @@ public class Database {
     public void add(String row){
         try (FileWriter writer = new FileWriter(filepath, true)) {
             row=comma(row);
-            writer.write(id+", "+row + "\n");
+            writer.write(row + "\n");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -34,7 +32,7 @@ public class Database {
     private String comma(String row){
         for(int i=0;i<row.length();i++){
             if(row.charAt(i)==' '){
-                row=row.substring(0,i)+", "+row.substring(i+1);
+                row=row.substring(0,i)+","+row.substring(i+1);
             }
         }
         return row;
@@ -59,5 +57,25 @@ public class Database {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean isInDB(String username){
+        try (BufferedReader reader = new BufferedReader(new FileReader(filepath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+
+                String[] parts = line.split(",");
+                String value=parts[0].trim();
+                if (value.equals(username)) {
+                    return true;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        // No user with that username exists
+        return false;
     }
 }

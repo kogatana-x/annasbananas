@@ -11,6 +11,7 @@ import java.io.IOException;
 
 class UserRepository {
     private String filename="users.txt";
+    Database UserDatabase = new Database(filename);
 
     /* Name: saveUser
      * Description: Saves a user to the database
@@ -18,10 +19,10 @@ class UserRepository {
      * Returns: none
      */
     public boolean saveUser(User user)  {
-        User rez = getUser(user.getUsername());
-        if(rez==null){
-            Database UserDatabase = new Database("users.txt");
-            String row=user.getUsername()+","+user.getHash()+","+user.getSalt()+","+user.getFirstname()+","+user.getLastname()+","+user.getCart();
+
+        boolean result = UserDatabase.isInDB(user.getUsername());
+        if(!result){
+            String row=user.getUsername()+","+user.getHash()+","+user.getXSalt()+","+user.getFirstname()+","+user.getLastname()+","+user.getCart();
             UserDatabase.add(row);
             return true;
         }
@@ -40,8 +41,7 @@ class UserRepository {
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
                 if (parts.length >= 2 && parts[0].equals(username)) {
-                    // Found the user, return the index
-                    return new User(parts[0], parts[1], parts[2], parts[3], parts[4],parts[5]);
+                    return new User(parts[0], parts[1], parts[2], parts[3], parts[4], parts[5]);
                 }
             }
         } catch (IOException e) {
@@ -51,6 +51,7 @@ class UserRepository {
         // No user with that username exists
         return null;
     }
+
 }
 
 

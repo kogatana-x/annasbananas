@@ -1,12 +1,9 @@
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -70,9 +67,12 @@ class ClientHandler implements Runnable {
     public void run(){
 
         HTMLParser parser = new HTMLParser(socket);
-        String[] values=parser.getValues();
+        parser.parseRawStrings();
         String method=parser.getMethod();
         String path=parser.getPath();
+
+        parser.getValues();
+       // String cookie = parser.getCookie();
 
         String filename="garbage";
         String mimeType = "text/html";
@@ -80,19 +80,22 @@ class ClientHandler implements Runnable {
         boolean result=false;
 
         if(method.equals("POST")&&path.equals("/register")){
-            int count=0;
             String username="",password="",firstname="",lastname="";
-            for (String value : values) {
-                if (value.equals("username")) {
-                    username = values[count++];
-                } else if (value.equals("password")) {
-                    password = values[count++];
-                } else if (value.equals("firstname")) {
-                    firstname = values[count++];
-                } else if (value.equals("lastname")) {
-                    lastname = values[count++];
+            for (int x=0;x<parser.values.length;x++) {
+                if (parser.values[x]==null){break;}
+                else if (parser.values[x].equals("username")) {
+                    x++;
+                    username = parser.values[x];
+                } else if (parser.values[x].equals("password")) {
+                    x++;
+                    password = parser.values[x];
+                } else if (parser.values[x].equals("firstname")) {
+                    x++;
+                    firstname = parser.values[x];
+                } else if (parser.values[x].equals("lastname")) {
+                    x++;
+                    lastname = parser.values[x];
                 }
-                count++;
            }
            UserAuthenticator authenticator = new UserAuthenticator(new UserRepository());
            result=authenticator.register(username,password,firstname,lastname);
@@ -106,11 +109,11 @@ class ClientHandler implements Runnable {
         else if(method.equals("POST")&&path.equals("/login")){
             int count=0;
             String username="",password="";
-            for (String value : values) {
+            for (String value : parser.values) {
                 if (value.equals("username")) {
-                    username = values[count++];
+                    username = parser.values[count++];
                 } else if (value.equals("password")) {
-                    password = values[count++];
+                    password = parser.values[count++];
                 }
                 count++;
            }
@@ -131,32 +134,75 @@ class ClientHandler implements Runnable {
             String cardCVC = "";
             String cardZip = "";
             int count=0;
-            for (String value : values) {
+            for (String value : parser.values) {
                 if (value.equals("cardNumber")) {
-                    cardNumber = values[count++];
+                    cardNumber = parser.values[count++];
                 } else if (value.equals("cardName")) {
-                    cardName = values[count++];
+                    cardName = parser.values[count++];
                 } else if (value.equals("cardExpiry")) {
-                    cardExpiry = values[count++];
+                    cardExpiry = parser.values[count++];
                 } else if (value.equals("cardCVC")) {
-                    cardCVC = values[count++];
+                    cardCVC = parser.values[count++];
                 } else if (value.equals("cardZip")) {
-                    cardZip = values[count++];
+                    cardZip = parser.values[count++];
                 }
                 count++;
             }
                 
                 System.out.println("Payment attempt from " + getSourceInfo(socket) + " with card number " + cardNumber);
-                // Save the payment into into the db
-                
+                PaymentAuthenticator authenticator = new PaymentAuthenticator(new PaymentRepository());
+                String username="";
+                authenticator.pay(username, cardNumber, cardName, cardExpiry, cardCVC, cardZip);
+                    
                 filename="finished-registration.html";
         } 
         
         else if(path.startsWith("/search")){
 
         }
+            // Map the requested path to a file
+            if(filename.equals("garbage")){
+                if (path.endsWith(".html")) {
+                    filename = path.substring(1);    
+                    mimeType = "text/html";
+                } else if (path.endsWith(".css")) {
+                    filename = path.substring(1); 
+                    mimeType = "text/css";
+                } else if (path.endsWith(".js")) {
+                    filename = path.substring(1);  
+                    mimeType = "application/javascript";
+                } else if (path.endsWith(".jpg") || path.endsWith(".jpeg")) {
+                    filename = path.substring(1); 
+                    mimeType = "image/jpeg";
+                } else {
+                    filename="index.html";
+                    mimeType = "text/html";
+                }
+            }
+            boolean isBinary = mimeType.startsWith("image/");
 
+            // Read the file into a byte array
+           try{
+             byte[] fileBytes = Files.readAllBytes(Paths.get("html/" + filename));
 
+            // Send an HTTP response with the content
+            OutputStream output = socket.getOutputStream();
+            output.write(("HTTP/1.1 200 OK\r\nContent-Type: " + mimeType + "\r\n\r\n").getBytes());
+
+            if (isBinary) {
+                // Write the binary data directly to the output
+                output.write(fileBytes);
+            } else {
+                // Convert the byte array to a string and write it to the output
+                PrintWriter writer = new PrintWriter(output, true);
+                writer.println(new String(fileBytes));
+            }
+
+            output.close();
+        } catch (IOException ex) {
+            System.out.println("Server exception: " + ex.getMessage());
+            ex.printStackTrace();
+        }
     }
 /*
 

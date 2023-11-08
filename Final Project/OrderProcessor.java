@@ -6,6 +6,5 @@
  */
 public class OrderProcessor {
     private Cart cart;
-    private PaymentProcessor paymentProcessor;
     // method to place orders
 }

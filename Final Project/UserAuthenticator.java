@@ -4,7 +4,7 @@
  * Relationships: Uses the UserRepository class
  */
 
-import java.nio.charset.StandardCharsets;
+import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -31,7 +31,9 @@ class UserAuthenticator {
             e.printStackTrace();
         }
         md.update(salt);
-        return md.digest(password.getBytes());
+        byte[] hash = md.digest(password.getBytes());
+
+        return hash;
     }
 
     /* Name: generateSalt
@@ -43,12 +45,13 @@ class UserAuthenticator {
         SecureRandom random = new SecureRandom();
         byte[] salt = new byte[16];
         random.nextBytes(salt);
+
         return salt;    
     }
 
     public boolean register(String username, String password, String firstname, String lastname){
         byte[] salt = generateSalt();
-        User user = new User(username,hashPassword(password,salt).toString(),salt.toString(),firstname,lastname);
+        User user = new User(username,hashPassword(password,salt),salt,firstname,lastname);
         return userRepository.saveUser(user);
     }
 
@@ -62,14 +65,18 @@ class UserAuthenticator {
         if (user == null) {
             return false;
         }
-        byte[] saltedHash = hashPassword(password, user.getSalt());
-        
+        String saltedHash = hashEncode(hashPassword(password, user.getSalt()));
         boolean result = saltedHash.equals(user.getHash());
 
         return result;
     }
 
-   
+    private String hashEncode(byte[] hash){
+        // Convert the hash to hexadecimal
+        BigInteger bi = new BigInteger(1, hash);
+        String hex = String.format("%0" + (hash.length << 1) + "x", bi);
+        return hex;
+    }
 }
 
 

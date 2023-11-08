@@ -1,1 +1,2 @@
-username, pwhash, salt, firstname, lastname, skey/cartid
+username, pwhash, salt, firstname, lastname, skey
+test,2a6481e83b33e1a3fc22583c8dcd6c3f0b31d52be29881c7b5ff1a2c504b4b99d086ef699f6f00a5caa62be76969eeaa2af16a2a5ab2ee22aa68c2af4ac56141,o2y6VP9lREzdPFh289D4AQ==,test,test,test1
