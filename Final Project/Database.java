@@ -78,4 +78,23 @@ public class Database {
         // No user with that username exists
         return false;
     }
+    public String[] returnResult(String username){
+        try (BufferedReader reader = new BufferedReader(new FileReader(filepath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+
+                String[] parts = line.split(",");
+                String value=parts[0].trim();
+                if (value.equals(username)) {
+                    return parts;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        // No user with that username exists
+        return null;
+    }
 }

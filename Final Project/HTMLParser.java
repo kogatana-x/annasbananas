@@ -63,8 +63,10 @@ public class HTMLParser{
     //STEP 2 - Extract Method + Request Path
     public void parseRawStrings(){
         String[] parts=parseRaw();
-        this.method = parts[0];
-        this.path = parts[1];
+        if(parts.length>1){
+            this.method = parts[0];
+            this.path = parts[1];
+        }
         
     }
 

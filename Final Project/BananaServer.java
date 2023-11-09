@@ -107,15 +107,16 @@ class ClientHandler implements Runnable {
         } 
         
         else if(method.equals("POST")&&path.equals("/login")){
-            int count=0;
             String username="",password="";
-            for (String value : parser.values) {
-                if (value.equals("username")) {
-                    username = parser.values[count++];
-                } else if (value.equals("password")) {
-                    password = parser.values[count++];
-                }
-                count++;
+            for (int x=0;x<parser.values.length;x++) {
+                if (parser.values[x]==null){break;}
+                else if (parser.values[x].equals("username")) {
+                    x++;
+                    username = parser.values[x];
+                } else if (parser.values[x].equals("password")) {
+                    x++;
+                    password = parser.values[x];
+                } 
            }
            UserAuthenticator authenticator = new UserAuthenticator(new UserRepository());
            String res;
@@ -133,22 +134,25 @@ class ClientHandler implements Runnable {
             String cardExpiry = "";
             String cardCVC = "";
             String cardZip = "";
-            int count=0;
-            for (String value : parser.values) {
-                if (value.equals("cardNumber")) {
-                    cardNumber = parser.values[count++];
-                } else if (value.equals("cardName")) {
-                    cardName = parser.values[count++];
-                } else if (value.equals("cardExpiry")) {
-                    cardExpiry = parser.values[count++];
-                } else if (value.equals("cardCVC")) {
-                    cardCVC = parser.values[count++];
-                } else if (value.equals("cardZip")) {
-                    cardZip = parser.values[count++];
+            for (int x=0;x<parser.values.length;x++) {
+                if (parser.values[x]==null){break;}
+                else if (parser.values[x].equals("cardNumber")) {
+                    x++;
+                    cardNumber = parser.values[x];
+                } else if (parser.values[x].equals("cardName")) {
+                    x++;
+                    cardName = parser.values[x];
+                } else if (parser.values[x].equals("cardExpiry")) {
+                    x++;
+                    cardExpiry = parser.values[x];
+                } else if (parser.values[x].equals("cardCVC")) {
+                    x++;
+                    cardCVC = parser.values[x];
+                } else if (parser.values[x].equals("cardZip")) {
+                    x++;
+                    cardZip = parser.values[x];
                 }
-                count++;
-            }
-                
+           }
                 System.out.println("Payment attempt from " + getSourceInfo(socket) + " with card number " + cardNumber);
                 PaymentAuthenticator authenticator = new PaymentAuthenticator(new PaymentRepository());
                 String username="";
@@ -158,7 +162,28 @@ class ClientHandler implements Runnable {
         } 
         
         else if(path.startsWith("/search")){
+                String query = null;
 
+                // Check if there are query parameters
+                int questionMarkIndex = path.indexOf("?");
+                if (questionMarkIndex != -1) {
+                    // Get the query parameters
+                    String queryParams = path.substring(questionMarkIndex + 1);
+
+                    // Split the parameters by "&"
+                    String[] pairs = queryParams.split("&");
+                    for (String pair : pairs) {
+                        // Split the name and value by "="
+                        String[] stuff = pair.split("=");
+                        if (stuff.length == 2) {
+                            // Check if the name is "query"
+                            if (stuff[0].equals("query")) {
+                                query = URLDecoder.decode(stuff[1], StandardCharsets.UTF_8.name());
+                            }
+                        }
+                    System.out.println(query);
+                    }
+                }
         }
             // Map the requested path to a file
             if(filename.equals("garbage")){
@@ -174,7 +199,15 @@ class ClientHandler implements Runnable {
                 } else if (path.endsWith(".jpg") || path.endsWith(".jpeg")) {
                     filename = path.substring(1); 
                     mimeType = "image/jpeg";
-                } else {
+                } else if (path.endsWith(".png")){
+                    filename = path.substring(1);
+                    mimeType = "image/png"; 
+                }
+                else if (path.endsWith(".ico")){
+                    filename = path.substring(1);
+                    mimeType = "image/x-icon";
+                }
+                else {
                     filename="index.html";
                     mimeType = "text/html";
                 }
@@ -204,78 +237,6 @@ class ClientHandler implements Runnable {
             ex.printStackTrace();
         }
     }
-/*
-
-            // If the path starts with "/search", parse the query parameters
-            else if (path.startsWith("/search")) {
-                String query = null;
-
-                // Check if there are query parameters
-                int questionMarkIndex = path.indexOf("?");
-                if (questionMarkIndex != -1) {
-                    // Get the query parameters
-                    String queryParams = path.substring(questionMarkIndex + 1);
-
-                    // Split the parameters by "&"
-                    String[] pairs = queryParams.split("&");
-                    for (String pair : pairs) {
-                        // Split the name and value by "="
-                        String[] stuff = pair.split("=");
-                        if (stuff.length == 2) {
-                            // Check if the name is "query"
-                            if (stuff[0].equals("query")) {
-                                query = URLDecoder.decode(stuff[1], StandardCharsets.UTF_8.name());
-                            }
-                        }
-                    System.out.println(query);
-                    }
-                }
-            }
-
-            // Map the requested path to a file
-            if(filename.equals("garbage")){
-                if (path.endsWith(".html")) {
-                    filename = path.substring(1);    
-                    mimeType = "text/html";
-                } else if (path.endsWith(".css")) {
-                    filename = path.substring(1); 
-                    mimeType = "text/css";
-                } else if (path.endsWith(".js")) {
-                    filename = path.substring(1);  
-                    mimeType = "application/javascript";
-                } else if (path.endsWith(".jpg") || path.endsWith(".jpeg")) {
-                    filename = path.substring(1); 
-                    mimeType = "image/jpeg";
-                } else {
-                    filename="index.html";
-                    mimeType = "text/html";
-                }
-            }
-            boolean isBinary = mimeType.startsWith("image/");
-
-            // Read the file into a byte array
-            byte[] fileBytes = Files.readAllBytes(Paths.get("html/" + filename));
-
-            // Send an HTTP response with the content
-            OutputStream output = socket.getOutputStream();
-            output.write(("HTTP/1.1 200 OK\r\nContent-Type: " + mimeType + "\r\n\r\n").getBytes());
-
-            if (isBinary) {
-                // Write the binary data directly to the output
-                output.write(fileBytes);
-            } else {
-                // Convert the byte array to a string and write it to the output
-                PrintWriter writer = new PrintWriter(output, true);
-                writer.println(new String(fileBytes));
-            }
-
-            output.close();
-            
-        } catch (IOException ex) {
-            System.out.println("Server exception: " + ex.getMessage());
-            ex.printStackTrace();
-        }
-    }*/
 }
 
 

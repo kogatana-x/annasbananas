@@ -5,9 +5,6 @@
  * Relationships: Uses the User class
  */
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 
 class UserRepository {
     private String filename="users.txt";
@@ -36,20 +33,11 @@ class UserRepository {
      * Returns: the user, or null if no user with that username exists
      */
     public User getUser(String username) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                if (parts.length >= 2 && parts[0].equals(username)) {
-                    return new User(parts[0], parts[1], parts[2], parts[3], parts[4], parts[5]);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        String[] parts = UserDatabase.returnResult(username);
+        if(parts.length>1){
+            return new User(parts[0], parts[1], parts[2], parts[3], parts[4], parts[5]);
         }
-
-        // No user with that username exists
-        return null;
+        return null;  
     }
 
 }
