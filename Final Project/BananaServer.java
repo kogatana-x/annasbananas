@@ -162,28 +162,7 @@ class ClientHandler implements Runnable {
         } 
         
         else if(path.startsWith("/search")){
-                String query = null;
-
-                // Check if there are query parameters
-                int questionMarkIndex = path.indexOf("?");
-                if (questionMarkIndex != -1) {
-                    // Get the query parameters
-                    String queryParams = path.substring(questionMarkIndex + 1);
-
-                    // Split the parameters by "&"
-                    String[] pairs = queryParams.split("&");
-                    for (String pair : pairs) {
-                        // Split the name and value by "="
-                        String[] stuff = pair.split("=");
-                        if (stuff.length == 2) {
-                            // Check if the name is "query"
-                            if (stuff[0].equals("query")) {
-                                query = URLDecoder.decode(stuff[1], StandardCharsets.UTF_8.name());
-                            }
-                        }
-                    System.out.println(query);
-                    }
-                }
+            String[] search=null; //stores all of the search parameters
         }
             // Map the requested path to a file
             if(filename.equals("garbage")){
@@ -206,6 +185,10 @@ class ClientHandler implements Runnable {
                 else if (path.endsWith(".ico")){
                     filename = path.substring(1);
                     mimeType = "image/x-icon";
+                }
+                else if (path.endsWith(".gif")){
+                    filename = path.substring(1);
+                    mimeType = "image/gif";
                 }
                 else {
                     filename="index.html";

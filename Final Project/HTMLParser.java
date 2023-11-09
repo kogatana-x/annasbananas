@@ -64,8 +64,12 @@ public class HTMLParser{
     public void parseRawStrings(){
         String[] parts=parseRaw();
         if(parts.length>1){
-            this.method = parts[0];
-            this.path = parts[1];
+            if(!parts[0].equals("=")){
+                System.out.println("Method: "+parts[0]);
+                System.out.println("Path: "+parts[1]);
+                this.method = parts[0];
+                this.path = parts[1];
+            }
         }
         
     }
@@ -86,8 +90,7 @@ public class HTMLParser{
             String[] pairs = requestBody.toString().split("&");
             return pairs;
         } catch (IOException ex) {
-            System.out.println("Server exception: " + ex.getMessage());
-            ex.printStackTrace();
+            
         }
         return null;
     }
@@ -102,7 +105,7 @@ public class HTMLParser{
 
         int x=0;
         for (String pair : pairs) {
-            temp = pair.split("="); //TODO "&"
+            temp = pair.split("="); 
             for(String part:temp){
                 if(!part.equals("=")){
                     try{
@@ -112,7 +115,7 @@ public class HTMLParser{
                 }               
             }
         }
-        //print(parts); //TODO DEBUG/REMOVE
+        print(parts);
         this.values=parts;
         
     }

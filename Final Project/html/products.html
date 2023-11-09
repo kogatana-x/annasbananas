@@ -23,13 +23,24 @@
         <a href="cart.html" class="cart" style="float: right; display: block; color: black; text-align: center; padding: 14px 16px; text-decoration: none; font-size: 17px;">Cart</a>
     </div>
     <div style="display: flex; justify-content: center; align-items: center; min-height: calc(100vh - 60px);">
-    //TODO <form action="/search" method="GET" style="width: 100%; align-items: center; justify-content: center; max-width: 400px; padding: 15px; background-color: white; border: 1px solid #ddd; border-radius: 5px;">
-        <h2 style="text-align: center;">Anna's Bananas</h2>
-        <h3 style="text-align: center;">Product Search</h3>
-        <label for="query" style="display: block; margin-bottom: 10px;">Search:</label>
-        <input type="text" id="query" name="query" required style="width: 90%; padding: 10px; margin-bottom: 10px; border-radius: 5px;">
-        <input type="submit" value="Search" style="width: 90%; padding: 10px; margin-bottom: 10px; border-radius: 5px; background-color: #FFD700; color: white; border: none; cursor: pointer;">
-    </form>
+        <form action="/search" method="GET" style="width: 100%; align-items: center; justify-content: center; max-width: 400px; padding: 15px; background-color: white; border: 1px solid #ddd; border-radius: 5px;">
+            <h2 style="text-align: center;">Anna's Bananas</h2>
+            <h3 style="text-align: center;">Product Search</h3>
+            <label for="type" style="display: block; margin-bottom: 10px;">Product Type:</label>
+            <select id="type" name="type" style="width: 90%; padding: 10px; margin-bottom: 10px; border-radius: 5px;">
+                <option value="All">All</option>
+                <option value="Produce">Produce</option>
+                <option value="Merchandise">Merchandise</option>
+            </select>
+            <label for="name" style="display: block; margin-bottom: 10px;">Product Name:</label>
+            <select id="name" name="name" style="width: 90%; padding: 10px; margin-bottom: 10px; border-radius: 5px;">
+                <option value="All">All</option>
+                <option value="Banana">Banana</option>
+                <option value="Gel-nana">Gel-Nana</option>
+                <option value="T-Shirt">T-Shirt</option>
+            </select>
+            <input type="submit" value="Search" style="width: 90%; padding: 10px; margin-bottom: 10px; border-radius: 5px; background-color: #FFD700; color: white; border: none; cursor: pointer;">
+        </form>
     </div>
 </body>
 </html>
