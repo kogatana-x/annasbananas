@@ -63,10 +63,9 @@ public class HTMLParser{
     //STEP 2 - Extract Method + Request Path
     public void parseRawStrings(){
         String[] parts=parseRaw();
+        if(parts==null){return;}
         if(parts.length>1){
             if(!parts[0].equals("=")){
-                System.out.println("Method: "+parts[0]);
-                System.out.println("Path: "+parts[1]);
                 this.method = parts[0];
                 this.path = parts[1];
             }
@@ -81,7 +80,7 @@ public class HTMLParser{
         // Read the headers and the blank line
        try{
             while (!(line = reader.readLine()).equals("")) {}
-
+            
             // Read the request body
             StringBuilder requestBody = new StringBuilder();
             while (reader.ready()) {
@@ -115,7 +114,7 @@ public class HTMLParser{
                 }               
             }
         }
-        print(parts);
+        //print(parts);
         this.values=parts;
         
     }
@@ -134,9 +133,19 @@ public class HTMLParser{
         return this.path;
     }
     
-    public boolean sendHTMLheader(){
-        boolean result=false;
-        return result;
+    public void sendResponse(String status, String contentType, String body) {
+        try {
+            OutputStream output = socket.getOutputStream();
+            PrintWriter writer = new PrintWriter(output, true);
+    
+            writer.println("HTTP/1.1 " + status);
+            writer.println("Content-Type: " + contentType);
+            writer.println("Content-Length: " + body.length());
+            writer.println(); // blank line between headers and content
+            writer.println(body);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public String getCookie(){

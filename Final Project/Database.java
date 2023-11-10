@@ -59,14 +59,14 @@ public class Database {
         }
     }
 
-    public boolean isInDB(String username){
+    public boolean isInDB(String id){
         try (BufferedReader reader = new BufferedReader(new FileReader(filepath))) {
             String line;
             while ((line = reader.readLine()) != null) {
 
                 String[] parts = line.split(",");
                 String value=parts[0].trim();
-                if (value.equals(username)) {
+                if (value.equals(id)) {
                     return true;
                 }
             }
@@ -78,14 +78,14 @@ public class Database {
         // No user with that username exists
         return false;
     }
-    public String[] returnResult(String username){
+    public String[] returnResult(String id){
         try (BufferedReader reader = new BufferedReader(new FileReader(filepath))) {
             String line;
             while ((line = reader.readLine()) != null) {
 
                 String[] parts = line.split(",");
                 String value=parts[0].trim();
-                if (value.equals(username)) {
+                if (value.equals(id)) {
                     return parts;
                 }
             }
@@ -96,5 +96,56 @@ public class Database {
 
         // No user with that username exists
         return null;
+    }
+
+    public int getRows(){
+        int count=0;
+        try (BufferedReader reader = new BufferedReader(new FileReader(filepath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                count++;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return 0;
+        }
+        return count;
+    }
+    
+    public boolean update(String row, int fieldIndex){ //TODO
+        try (BufferedReader reader = new BufferedReader(new FileReader(filepath));
+             FileWriter writer = new FileWriter(filepath, false)) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                String value=parts[0].trim();
+                if (value.equals(row.split(",")[fieldIndex].trim())) {
+                    line=row;
+                }
+                writer.write(line + "\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    public boolean delete(String row){ //TODO
+        try (BufferedReader reader = new BufferedReader(new FileReader(filepath));
+             FileWriter writer = new FileWriter(filepath, false)) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                String value=parts[0].trim();
+                if (!value.equals(row.split(",")[0].trim())) {
+                    writer.write(line + "\n");
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 }
