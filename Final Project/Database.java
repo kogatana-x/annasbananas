@@ -4,6 +4,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 
 public class Database {
@@ -132,7 +133,8 @@ public class Database {
     }*/
         
     public boolean update(String row, String field, String newValue){ //TODO
-        int fieldIndex=isInDB(field);
+        //int fieldIndex=isInDB(field);
+        int fieldIndex=Integer.parseInt(field);
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filepath));
              FileWriter writer = new FileWriter(filepath, false)) {
@@ -140,8 +142,10 @@ public class Database {
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
                 String value=parts[0].trim();
-                if (value.equals(row.split(",")[fieldIndex].trim())) {
-                    line=row;
+                if (parts[0].trim().equals(row)) {
+                   String before = String.join(",", Arrays.copyOfRange(parts, 0, fieldIndex));
+                    String after = String.join(",", Arrays.copyOfRange(parts, fieldIndex + 1, parts.length));
+                    line = before + "," + newValue + "," + after;
                 }
                 writer.write(line + "\n");
             }
@@ -152,21 +156,4 @@ public class Database {
         return true;
     }
 
-    public boolean delete(String row){ //TODO
-        try (BufferedReader reader = new BufferedReader(new FileReader(filepath));
-             FileWriter writer = new FileWriter(filepath, false)) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                String value=parts[0].trim();
-                if (!value.equals(row.split(",")[0].trim())) {
-                    writer.write(line + "\n");
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-        return true;
-    }
 }

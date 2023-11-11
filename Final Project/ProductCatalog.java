@@ -31,11 +31,11 @@ public class ProductCatalog {
         result = productRepository.updateProduct(product);
 
         return result;
-    }*/
+    }
     public boolean deleteProduct(String id) {
         boolean result=false;
         result = productRepository.deleteProduct(id);
 
         return result;
-    }
+    }*/
 }

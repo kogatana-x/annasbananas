@@ -44,10 +44,10 @@ public class ProductRepository {
         String row=product.getId()+","+product.getType()+","+product.getName()+","+product.getDescription()+","+product.getPrice()+","+product.getUnit()+","+product.getQuantity()+","+product.getImage();
         boolean result=ProductDatabase.update(row,0);
         return result;
-    }*/
+    }
 
     public boolean deleteProduct(String id){
         boolean result=ProductDatabase.delete(id);
         return result;
-    }
+    }*/
 }

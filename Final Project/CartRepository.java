@@ -38,11 +38,11 @@ public class CartRepository {
      *            PQ - the product-quantity pairs for the cart
      * Returns: the index of the cart that was added
      */
-    public String add(String username, Integer[][] PQ){
+    public String add(String username, int mProd){
         String index=nextID();
-        String row=index+","+username+",false,";
-        for(int x=0; x<PQ.length;x++){
-            row+="["+PQ[x][0]+"."+PQ[x][1]+"]";
+        String row=index+","+username+",false";
+        for(int x=0; x<mProd;x++){
+            row+=",0";
         }
         CartDatabase.add(row);
         return index;
@@ -55,14 +55,8 @@ public class CartRepository {
      *             quantity - the new quantity of the product 
      * Returns: true if the update was successful, false otherwise
      */
-    public boolean update(String cartIndex, String product, String quantity){
-        if(CartDatabase.isInDB(cartIndex)==-1){
-            return false;
-        }
-        else{
-            CartDatabase.update(cartIndex,product,quantity);
-            return true;
-        }
+    public void update(String cartIndex, String product, String quantity){
+        CartDatabase.update(cartIndex,product,quantity);
     }
 
     /* Name: delete
@@ -76,15 +70,6 @@ public class CartRepository {
         return result;
     }
 
-    /* Name: clear
-     * Description: Clears the cart. Sets the quantity of all products to 0
-     * Parameters: cartIndex - the index of the cart to update
-     * Returns: true if the clear was successful, false otherwise
-     */
-    public boolean clear(String cartIndex){
-        boolean result=CartDatabase.delete(cartIndex);
-        return result;
-    }
 
     /* Name: checkout
      * Description: Checks out the cart. Sets the status to true
