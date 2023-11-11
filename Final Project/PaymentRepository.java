@@ -4,8 +4,8 @@ public class PaymentRepository {
     Database PaymentDatabase = new Database(filename);
 
     public boolean savePayments(Payment payment){
-        boolean result = PaymentDatabase.isInDB(payment.getUsername());
-        if(!result){
+        int index = PaymentDatabase.isInDB(payment.getUsername());
+        if(index==-1){
             String row=payment.getUsername()+","+payment.getCardNumber()+","+payment.getCardName()+","+payment.getCardExpiry()+","+payment.getCardCVC()+","+payment.getCardZip();
             PaymentDatabase.add(row);
             return true;

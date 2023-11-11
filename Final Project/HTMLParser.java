@@ -33,9 +33,12 @@ public class HTMLParser{
 
     //STEP 1 - Extract Raw Request Info
     private String[] parseRaw(){
-        String[] parts={""};
+        String[] parts;
 
-        if (line == null) {return null;}
+        if (line == null) {
+            String[] msg={"error"};
+            return msg;
+        }
         else if (line.startsWith("Cookie:")) {
             // Extract the cookie value
             parts = line.split(":");
@@ -53,7 +56,8 @@ public class HTMLParser{
         else{
             parts = line.split(" ");
             if (parts.length < 2) {
-                return null;
+                String[] msg={"error"};
+                return msg;
             }
         }
 
@@ -76,11 +80,11 @@ public class HTMLParser{
     //STEP 3 - Extract Request Parameters
     private String[] parseRawParameters(){
         //parseRawStrings();
-
+        
         // Read the headers and the blank line
        try{
             while (!(line = reader.readLine()).equals("")) {}
-            
+
             // Read the request body
             StringBuilder requestBody = new StringBuilder();
             while (reader.ready()) {
@@ -89,14 +93,16 @@ public class HTMLParser{
             String[] pairs = requestBody.toString().split("&");
             return pairs;
         } catch (IOException ex) {
-            
+            String[] error={"error"};
+             return error;
         }
-        return null;
     }
     
     //STEP 4 - Decode Values
     public void getValues(){
         String[] pairs=parseRawParameters();
+        if(pairs[0].equals("error")){return;}
+
         int len = pairs.length*2;
 
         String[] parts=new String[len*2];

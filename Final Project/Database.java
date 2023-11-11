@@ -2,6 +2,9 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
 
 public class Database {
     public String filepath="database/"; //name of the database file
@@ -59,24 +62,25 @@ public class Database {
         }
     }
 
-    public boolean isInDB(String id){
+    public int isInDB(String id){
         try (BufferedReader reader = new BufferedReader(new FileReader(filepath))) {
             String line;
+            int count=0;
             while ((line = reader.readLine()) != null) {
-
                 String[] parts = line.split(",");
                 String value=parts[0].trim();
                 if (value.equals(id)) {
-                    return true;
+                    return count;
                 }
+                count++;
             }
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
+            return -1;
         }
 
         // No user with that username exists
-        return false;
+        return -1;
     }
     public String[] returnResult(String id){
         try (BufferedReader reader = new BufferedReader(new FileReader(filepath))) {
@@ -98,8 +102,8 @@ public class Database {
         return null;
     }
 
-    public int getRows(){
-        int count=0;
+    public int getNumberOfRows(){
+        int count=1;
         try (BufferedReader reader = new BufferedReader(new FileReader(filepath))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -111,8 +115,25 @@ public class Database {
         }
         return count;
     }
-    
-    public boolean update(String row, int fieldIndex){ //TODO
+  /*  public String[] getAll(){
+        String[] result=new String[getNumberOfRows()];
+        try (BufferedReader reader = new BufferedReader(new FileReader(filepath))) {
+            String line;
+            int count=0;
+            while ((line = reader.readLine()) != null) {
+                result[count]=line;
+                count++;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return result;
+    }*/
+        
+    public boolean update(String row, String field, String newValue){ //TODO
+        int fieldIndex=isInDB(field);
+
         try (BufferedReader reader = new BufferedReader(new FileReader(filepath));
              FileWriter writer = new FileWriter(filepath, false)) {
             String line;

@@ -1,9 +1,9 @@
 id,type,name,description,price,unit,quantity,image
-0,Produce,Banana 1,An underripe banana. Might wanna wait a bit...,5.0, USD,999,banana1.png
-1,Produce,Banana 2,A perfectly ripe banana. Great for eating.,10.0,USD,999,banana2.png
-2,Produce,Banana 3,An overripe banana. Good for baking.,2.0,USD,999,banana3.png
+0,Produce,Banana 1,An underripe banana. Might wanna wait a bit...,5.00, USD,999,banana1.png
+1,Produce,Banana 2,A perfectly ripe banana. Great for eating.,10.00,USD,999,banana2.png
+2,Produce,Banana 3,An overripe banana. Good for baking.,2.00,USD,999,banana3.png
 3,Produce,Spinning Banana,A banana with magic powers that makes it spin. Looks cool.,55.99,USD,999,yellow-spinning-banana.gif
 4,Produce,Gel-Nana,A by-product of Microwave (Temporary Name). Tastes like mashed potatoes.,2.33,USD,999,gel-nana.png
-5,Merchandise,T-Shirt,Wonderful addition to any wardrobe.,35.0,USD,999,tshirt.png
+5,Merchandise,T-Shirt,Wonderful addition to any wardrobe.,35.00,USD,999,tshirt.png
 6,Merchandise,Hoodie,Perfect for winter.,55,USD,999,hoodie.png
-7,Merchandise,Mug,Great for any collection. Suprisingly good at holding bananas.,20.0,USD,999,mug.png
+7,Merchandise,Mug,Great for any collection. Suprisingly good at holding bananas.,20.00,USD,999,mug.png

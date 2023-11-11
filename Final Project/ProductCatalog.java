@@ -16,12 +16,7 @@ public class ProductCatalog {
         return product;
     }
     public Product[] getAllProducts(){
-        Product[] products = new Product[productRepository.getNumberOfProducts()-1];
-        for(int x=0;x<products.length;x++){
-            if(productRepository.getProduct(Integer.toString(x))!=null){
-                products[x]=productRepository.getProduct(Integer.toString(x));
-            }
-        }
+        Product[] products = productRepository.getAllProducts();
         return products;
     }
 
@@ -31,12 +26,12 @@ public class ProductCatalog {
 
         return result;
     }
-    public boolean updateProduct(Product product) {
+    /*public boolean updateProduct(Product product) {
         boolean result=false;
         result = productRepository.updateProduct(product);
 
         return result;
-    }
+    }*/
     public boolean deleteProduct(String id) {
         boolean result=false;
         result = productRepository.deleteProduct(id);

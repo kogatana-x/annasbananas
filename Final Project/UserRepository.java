@@ -17,8 +17,8 @@ class UserRepository {
      */
     public boolean saveUser(User user)  {
 
-        boolean result = UserDatabase.isInDB(user.getUsername());
-        if(!result){
+        int index = UserDatabase.isInDB(user.getUsername());
+        if(index==-1){
             String row=user.getUsername()+","+user.getHash()+","+user.getXSalt()+","+user.getFirstname()+","+user.getLastname()+","+user.getCart();
             UserDatabase.add(row);
             return true;

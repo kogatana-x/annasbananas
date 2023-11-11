@@ -38,6 +38,7 @@ public class ClientHandler implements Runnable {
         parser.parseRawStrings();
         String method=parser.getMethod();
         String path=parser.getPath();
+        System.out.println(method+" Request from " + getSourceInfo(socket) + " for " + path);
 
         parser.getValues();
        // String cookie = parser.getCookie();
@@ -129,6 +130,46 @@ public class ClientHandler implements Runnable {
                 filename="finished-registration.html";
         } 
         
+        else if(method.equals("POST")&&path.equals("/addToCart")){
+            String productId = "";
+            for (int x=0;x<parser.values.length;x++) {
+                if (parser.values[x]==null){break;}
+                else if (parser.values[x].equals("productId")) {
+                    x++;
+                    productId = parser.values[x];
+                }
+           }
+           System.out.println("Add to cart attempt from " + getSourceInfo(socket) + " with productId " + productId);
+           //CartAuthenticator authenticator = new CartAuthenticator(new CartRepository());
+           //String username="";
+           //authenticator.addToCart(username, productId);
+           path="/products.html";
+        } 
+        
+        else if(method.equals("POST")&&path.equals("/checkout")){
+            String productId = "";
+            for (int x=0;x<parser.values.length;x++) {
+                if (parser.values[x]==null){break;}
+                else if (parser.values[x].equals("productId")) {
+                    x++;
+                    productId = parser.values[x];
+                }
+           }
+           System.out.println("Checkout attempt from " + getSourceInfo(socket) + " with productId " + productId);
+           //CartAuthenticator authenticator = new CartAuthenticator(new CartRepository());
+           //String username="";
+           //authenticator.checkout(username, productId);
+           //filename="finished-registration.html";
+        } 
+        
+        else if(method.equals("POST")&&path.equals("/logout")){
+            //String username="";
+            //System.out.println("Logout attempt from " + getSourceInfo(socket) + " with username " + username);
+            //UserAuthenticator authenticator = new UserAuthenticator(new UserRepository());
+            //authenticator.logout(username);
+            //filename="finished-registration.html";
+        } 
+
         if(path.startsWith("/products.html")){
             ProductCatalog productCatalog = new ProductCatalog(new ProductRepository());
             Product[] products = productCatalog.getAllProducts();
@@ -160,57 +201,57 @@ public class ClientHandler implements Runnable {
             parser.sendResponse("200 OK", "text/html", finalHTML);
             System.out.println("Products page requested from " + getSourceInfo(socket));
         }
-            // Map the requested path to a file
-           else if(filename.equals("garbage")){
-                if (path.endsWith(".html")) {
-                    filename = path.substring(1);    
-                    mimeType = "text/html";
-                } else if (path.endsWith(".css")) {
-                    filename = path.substring(1); 
-                    mimeType = "text/css";
-                } else if (path.endsWith(".js")) {
-                    filename = path.substring(1);  
-                    mimeType = "application/javascript";
-                } else if (path.endsWith(".jpg") || path.endsWith(".jpeg")) {
-                    filename = path.substring(1); 
-                    mimeType = "image/jpeg";
-                } else if (path.endsWith(".png")){
-                    filename = path.substring(1);
-                    mimeType = "image/png"; 
-                }
-                else if (path.endsWith(".ico")){
-                    filename = path.substring(1);
-                    mimeType = "image/x-icon";
-                }
-                else if (path.endsWith(".gif")){
-                    filename = path.substring(1);
-                    mimeType = "image/gif";
-                }
-                else {
-                    filename="index.html";
-                    mimeType = "text/html";
-                }
+        // Map the requested path to a file
+        else if(filename.equals("garbage")){
+            if (path.endsWith(".html")) {
+                filename = path.substring(1);    
+                mimeType = "text/html";
+            } else if (path.endsWith(".css")) {
+                filename = path.substring(1); 
+                mimeType = "text/css";
+            } else if (path.endsWith(".js")) {
+                filename = path.substring(1);  
+                mimeType = "application/javascript";
+            } else if (path.endsWith(".jpg") || path.endsWith(".jpeg")) {
+                filename = path.substring(1); 
+                mimeType = "image/jpeg";
+            } else if (path.endsWith(".png")){
+                filename = path.substring(1);
+                mimeType = "image/png"; 
             }
-            boolean isBinary = mimeType.startsWith("image/");
-
-            // Read the file into a byte array
-           try{
-             byte[] fileBytes = Files.readAllBytes(Paths.get("html/" + filename));
-
-            // Send an HTTP response with the content
-            OutputStream output = socket.getOutputStream();
-            output.write(("HTTP/1.1 200 OK\r\nContent-Type: " + mimeType + "\r\n\r\n").getBytes());
-
-            if (isBinary) {
-                // Write the binary data directly to the output
-                output.write(fileBytes);
-            } else {
-                // Convert the byte array to a string and write it to the output
-                PrintWriter writer = new PrintWriter(output, true);
-                writer.println(new String(fileBytes));
+            else if (path.endsWith(".ico")){
+                filename = path.substring(1);
+                mimeType = "image/x-icon";
             }
+            else if (path.endsWith(".gif")){
+                filename = path.substring(1);
+                mimeType = "image/gif";
+            }
+            else {
+                filename="index.html";
+                mimeType = "text/html";
+            }
+        }
+        boolean isBinary = mimeType.startsWith("image/");
 
-            output.close();
+        // Read the file into a byte array
+        try{
+            byte[] fileBytes = Files.readAllBytes(Paths.get("html/" + filename));
+
+        // Send an HTTP response with the content
+        OutputStream output = socket.getOutputStream();
+        output.write(("HTTP/1.1 200 OK\r\nContent-Type: " + mimeType + "\r\n\r\n").getBytes());
+
+        if (isBinary) {
+            // Write the binary data directly to the output
+            output.write(fileBytes);
+        } else {
+            // Convert the byte array to a string and write it to the output
+            PrintWriter writer = new PrintWriter(output, true);
+            writer.println(new String(fileBytes));
+        }
+
+        output.close();
         } catch(NoSuchFileException e){
             System.out.println("File not found: " + e.getMessage());
             parser.sendResponse("404 Not Found", "text/html", "<h1>404 Not Found</h1>");
