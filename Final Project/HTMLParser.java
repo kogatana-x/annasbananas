@@ -83,15 +83,18 @@ public class HTMLParser{
         
         // Read the headers and the blank line
        try{
-            while (!(line = reader.readLine()).equals("")) {}
 
-            // Read the request body
-            StringBuilder requestBody = new StringBuilder();
-            while (reader.ready()) {
-                requestBody.append((char) reader.read());
-            }
-            String[] pairs = requestBody.toString().split("&");
-            return pairs;
+            do{ 
+                line = reader.readLine();
+                if(line==null){return null;}
+                // Read the request body
+                StringBuilder requestBody = new StringBuilder();
+                while (reader.ready()) {
+                    requestBody.append((char) reader.read());
+                }
+                String[] pairs = requestBody.toString().split("&");
+                return pairs;
+            }while(!line.equals(""));
         } catch (IOException ex) {
             String[] error={"error"};
              return error;
@@ -105,7 +108,7 @@ public class HTMLParser{
 
         int len = pairs.length*2;
 
-        String[] parts=new String[len*2];
+        String[] parts=new String[len*6]; //way bigger than it needs to be b/c scanning tests
         String[] temp=new String[len];
 
         int x=0;
@@ -116,7 +119,9 @@ public class HTMLParser{
                     try{
                         parts[x]= URLDecoder.decode(part, StandardCharsets.UTF_8.name());
                         x++;
-                    } catch (IOException ex) {} 
+                    } 
+                    catch (IOException ex) {} 
+                    catch (IllegalArgumentException ex) {}
                 }               
             }
         }

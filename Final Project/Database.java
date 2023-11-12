@@ -24,7 +24,6 @@ public class Database {
             row=comma(row);
             writer.write(row + "\n");
         } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
@@ -59,7 +58,6 @@ public class Database {
             writer.write(firstLine != null ? firstLine : "");
 
         } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
@@ -76,10 +74,8 @@ public class Database {
                 count++;
             }
         } catch (IOException e) {
-            e.printStackTrace();
             return -1;
         }
-
         // No user with that username exists
         return -1;
     }
@@ -95,7 +91,6 @@ public class Database {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
             return null;
         }
 
@@ -111,8 +106,7 @@ public class Database {
                 count++;
             }
         } catch (IOException e) {
-            e.printStackTrace();
-            return 0;
+            return -1;
         }
         return count;
     }
@@ -150,7 +144,6 @@ public class Database {
                 writer.write(line + "\n");
             }
         } catch (IOException e) {
-            e.printStackTrace();
             return false;
         }
         return true;

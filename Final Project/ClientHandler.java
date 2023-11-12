@@ -5,11 +5,13 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 
 public class ClientHandler implements Runnable {
     private Socket socket;
+    private String username;
 
     public ClientHandler(Socket socket) {
         this.socket = socket;
@@ -173,35 +175,36 @@ public class ClientHandler implements Runnable {
         if(path.startsWith("/products.html")){
             ProductCatalog productCatalog = new ProductCatalog(new ProductRepository());
             Product[] products = productCatalog.getAllProducts();
-            StringBuilder html = new StringBuilder();
-            html.append("<div class=\"product-grid\">");
-
-            for (Product product : products){
-                html.append("<div class=\"product-card\">");
-                html.append("<h2>").append(product.getName()).append("</h2>");
-                html.append("<p><i> ").append(product.getDescription()).append("</i></p>");
-                html.append("<p>Price: $").append(product.getPrice()).append("</p>");
-                html.append("<p>Quantity Available: ").append(product.getQuantity()).append("</p>");
-                html.append("<img src='").append(product.getImage()).append("' alt='Product Image'>");
-                html.append("<form action='/addToCart' method='post'>");
-                html.append("<input type='hidden' name='productId' value='").append(product.getId()).append("'>");
-                html.append("<input type='submit' value='Add to Cart'>");
-                html.append("</form>");
-                html.append("</div>");
-            }
-            html.append("</div>");
-
+            HTMLDisplay display = new HTMLDisplay(socket);
+            StringBuilder html = display.getString(products);
             String productsHtml="";
             filename="products.html";
             mimeType = "text/html";
-           try{ productsHtml = new String(Files.readAllBytes(Paths.get("html/products.html")), StandardCharsets.UTF_8);}
+            try{ productsHtml = new String(Files.readAllBytes(Paths.get("html/products.html")), StandardCharsets.UTF_8);}
             catch(IOException ex){System.out.println("Server exception: " + ex.getMessage());}
             String finalHTML = productsHtml.replace("<div id=\"product-list\"></div>", html.toString());
             // Send the generated HTML as the response
             parser.sendResponse("200 OK", "text/html", finalHTML);
             System.out.println("Products page requested from " + getSourceInfo(socket));
         }
+        //ONLY IF USER IS LOGGED IN IF NOT SAY LOGIN FIRST
+        else if(path.startsWith("/cart.html")){
+            CartViewer cartViewer = new CartViewer(username);
+            Product[] cartProducts = cartViewer.displayCart();
+            HTMLDisplay display = new HTMLDisplay(socket);
+            StringBuilder html = display.getString(cartProducts);
+            String cartHtml="";
+            filename="cart.html";
+            mimeType = "text/html";
+            try{ cartHtml = new String(Files.readAllBytes(Paths.get("html/cart.html")), StandardCharsets.UTF_8);}
+            catch(IOException ex){System.out.println("Server exception: " + ex.getMessage());}
+            String finalHTML = cartHtml.replace("<div id=\"product-list\"></div>", html.toString());
+            // Send the generated HTML as the response
+            parser.sendResponse("200 OK", "text/html", finalHTML);
+            System.out.println("Products page requested from " + getSourceInfo(socket));
+        }
         // Map the requested path to a file
+       
         else if(filename.equals("garbage")){
             if (path.endsWith(".html")) {
                 filename = path.substring(1);    
@@ -252,12 +255,14 @@ public class ClientHandler implements Runnable {
         }
 
         output.close();
-        } catch(NoSuchFileException e){
+        } catch(InvalidPathException x){
+            System.out.println("File not found: " + x.getMessage());
+            parser.sendResponse("404 Not Found", "text/html", "<h1>404 Not Found</h1>");
+        }catch(NoSuchFileException e){
             System.out.println("File not found: " + e.getMessage());
             parser.sendResponse("404 Not Found", "text/html", "<h1>404 Not Found</h1>");
         }catch (IOException ex) {
-            System.out.println("Server exception: " + ex.getMessage());
-            ex.printStackTrace();
+
         }
     }
 }

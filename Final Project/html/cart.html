@@ -77,29 +77,7 @@
             <button class="banana-button" onclick="location.href='payments.html'" type="button">Checkout</button>
             <button class="banana-button" onclick="location.href='products.html'" type="button">Continue Shopping</button>
         </div>
-        <ul id="cart-items" class="cart-items">
-            <!-- Cart items will be added here -->
-        </ul>
+        <div id=\"product-list\"></div>
         
-
-    <script>
-        // Example cart items
-        var cartItems = [
-            'Banana Bread',
-            'Banana Smoothie',
-            'Banana Pie'
-        ];
-
-        // Get the cart items element
-        var cartItemsElement = document.getElementById('cart-items');
-
-        // Add each cart item to the cart items element
-        for (var i = 0; i < cartItems.length; i++) {
-            var listItem = document.createElement('li');
-            listItem.textContent = cartItems[i];
-            listItem.className = 'cart-item';
-            cartItemsElement.appendChild(listItem);
-        }
-    </script>
 </body>
 </html>
