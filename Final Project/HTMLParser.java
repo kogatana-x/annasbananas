@@ -104,7 +104,7 @@ public class HTMLParser{
     //STEP 4 - Decode Values
     public void getValues(){
         String[] pairs=parseRawParameters();
-        if(pairs[0].equals("error")){return;}
+        if(pairs==null||pairs[0].equals("error")){return;}
 
         int len = pairs.length*2;
 
@@ -154,6 +154,19 @@ public class HTMLParser{
             writer.println("Content-Length: " + body.length());
             writer.println(); // blank line between headers and content
             writer.println(body);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void redirect(String location) {
+        try {
+            OutputStream output = socket.getOutputStream();
+            PrintWriter writer = new PrintWriter(output, true);
+    
+            writer.println("HTTP/1.1 302 Found");
+            writer.println("Location: " + location);
+            writer.println(); // blank line between headers and content
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -61,10 +61,14 @@
     </div>-->
     <h1>Products</h1>
     <img src="annasbananaslogo3.png" alt="Banana" style="display: block; margin-left: auto; margin-right: auto; width: 15%;">
-
     <div id="product-list"></div>
+    <div id="test"></div>
+    <div id=alert></div>
 </body>
 <script>
+    if (new URL(window.location.href).searchParams.get('showAlert') === 'true') {
+        alert('You need to be logged in to checkout.');
+    }
     document.querySelectorAll('.add-to-cart').forEach(button => {
         button.addEventListener('click', function() {
             var productId = this.getAttribute('data-product-id');
@@ -85,6 +89,7 @@
             });
         });
     });
+
 
 </script>
 </html>

@@ -9,6 +9,9 @@ public class CartViewer {
         //takes cart.id and displays all products in cart
         ProductCatalog pc = new ProductCatalog(new ProductRepository());
         String[] cartProducts = cart.getCart();
+        if(cartProducts==null||cartProducts[0].equals("error")){
+            return null;
+        }
         Product[] products = new Product[cartProducts.length];
         System.out.println("Cart ID: " + cartProducts[0]);
         for(int x=0; x<cartProducts.length; x++){

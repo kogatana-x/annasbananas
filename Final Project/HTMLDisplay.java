@@ -1,9 +1,5 @@
-import java.net.Socket;
+public class HTMLDisplay {
 
-public class HTMLDisplay extends HTMLParser{
-    public HTMLDisplay(Socket socket){
-        super(socket);
-    }
     public StringBuilder getString(Product[] products){
         StringBuilder html = new StringBuilder();
         html.append("<div class=\"product-grid\">");
@@ -24,7 +20,6 @@ public class HTMLDisplay extends HTMLParser{
             }
         }
         html.append("</div>");
-
         return html;
     }
 }

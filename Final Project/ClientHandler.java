@@ -11,7 +11,7 @@ import java.nio.file.Paths;
 
 public class ClientHandler implements Runnable {
     private Socket socket;
-    private String username;
+    private String username="";
 
     public ClientHandler(Socket socket) {
         this.socket = socket;
@@ -50,6 +50,7 @@ public class ClientHandler implements Runnable {
 
         boolean result=false;
 
+        //REQUEST/FORM BASED PATHS >> 
         if(method.equals("POST")&&path.equals("/register")){
             String username="",password="",firstname="",lastname="";
             for (int x=0;x<parser.values.length;x++) {
@@ -92,90 +93,111 @@ public class ClientHandler implements Runnable {
            UserAuthenticator authenticator = new UserAuthenticator(new UserRepository());
            String res;
            result=authenticator.login(username, password);
-           if(result){res="success";}else{res="failure";}
+           if(result){
+            res="success";
+            }
+            else{
+                res="failure";
+            }
            System.out.println("Login attempt "+res+" from " + getSourceInfo(socket) + " with username " + username);
         
            filename="index.html"; //TODO add a page for failed login and update username if logged in
 
         } 
         
-        else if(method.equals("POST")&&path.equals("/payments")){
-            String cardNumber = "";
-            String cardName = "";
-            String cardExpiry = "";
-            String cardCVC = "";
-            String cardZip = "";
-            for (int x=0;x<parser.values.length;x++) {
-                if (parser.values[x]==null){break;}
-                else if (parser.values[x].equals("cardNumber")) {
-                    x++;
-                    cardNumber = parser.values[x];
-                } else if (parser.values[x].equals("cardName")) {
-                    x++;
-                    cardName = parser.values[x];
-                } else if (parser.values[x].equals("cardExpiry")) {
-                    x++;
-                    cardExpiry = parser.values[x];
-                } else if (parser.values[x].equals("cardCVC")) {
-                    x++;
-                    cardCVC = parser.values[x];
-                } else if (parser.values[x].equals("cardZip")) {
-                    x++;
-                    cardZip = parser.values[x];
-                }
-           }
-                System.out.println("Payment attempt from " + getSourceInfo(socket) + " with card number " + cardNumber);
-                PaymentAuthenticator authenticator = new PaymentAuthenticator(new PaymentRepository());
-                String username="";
-                authenticator.pay(username, cardNumber, cardName, cardExpiry, cardCVC, cardZip);
-                    
-                filename="finished-registration.html";
-        } 
-        
+        //CAN ONLY DO THESE W/ A LOGGED IN USER
+        if(method.equals("POST")&&path.equals("/payments")){
+                String cardNumber = "";
+                String cardName = "";
+                String cardExpiry = "";
+                String cardCVC = "";
+                String cardZip = "";
+                for (int x=0;x<parser.values.length;x++) {
+                    if (parser.values[x]==null){break;}
+                    else if (parser.values[x].equals("cardNumber")) {
+                        x++;
+                        cardNumber = parser.values[x];
+                    } else if (parser.values[x].equals("cardName")) {
+                        x++;
+                        cardName = parser.values[x];
+                    } else if (parser.values[x].equals("cardExpiry")) {
+                        x++;
+                        cardExpiry = parser.values[x];
+                    } else if (parser.values[x].equals("cardCVC")) {
+                        x++;
+                        cardCVC = parser.values[x];
+                    } else if (parser.values[x].equals("cardZip")) {
+                        x++;
+                        cardZip = parser.values[x];
+                    }
+            }
+                    System.out.println("Payment attempt from " + getSourceInfo(socket) + " with card number " + cardNumber);
+                    PaymentAuthenticator authenticator = new PaymentAuthenticator(new PaymentRepository());
+                    String username="";
+                    authenticator.pay(username, cardNumber, cardName, cardExpiry, cardCVC, cardZip);
+                        
+                    filename="finished-registration.html";
+            } 
+            
         else if(method.equals("POST")&&path.equals("/addToCart")){
             String productId = "";
-            for (int x=0;x<parser.values.length;x++) {
-                if (parser.values[x]==null){break;}
-                else if (parser.values[x].equals("productId")) {
-                    x++;
-                    productId = parser.values[x];
+            String rez="failed";
+            path="/products.html";
+            method="GET";
+            if(username.equals("")){
+                //NEED TO BE LOGGED IN: 
+                path="/products.html?showAlert=true";
+                parser.redirect(path);
+            }
+            else{
+                for (int x=0;x<parser.values.length;x++) {
+                    if (parser.values[x]==null){break;}
+                    else if (parser.values[x].equals("productId")) {
+                        x++;
+                        productId = parser.values[x];
+                    }
                 }
-           }
-           System.out.println("Add to cart attempt from " + getSourceInfo(socket) + " with productId " + productId);
-           //CartAuthenticator authenticator = new CartAuthenticator(new CartRepository());
-           //String username="";
-           //authenticator.addToCart(username, productId);
-           path="/products.html";
-        } 
-        
-        else if(method.equals("POST")&&path.equals("/checkout")){
-            String productId = "";
-            for (int x=0;x<parser.values.length;x++) {
-                if (parser.values[x]==null){break;}
-                else if (parser.values[x].equals("productId")) {
-                    x++;
-                    productId = parser.values[x];
-                }
-           }
-           System.out.println("Checkout attempt from " + getSourceInfo(socket) + " with productId " + productId);
-           //CartAuthenticator authenticator = new CartAuthenticator(new CartRepository());
-           //String username="";
-           //authenticator.checkout(username, productId);
-           //filename="finished-registration.html";
-        } 
-        
-        else if(method.equals("POST")&&path.equals("/logout")){
+                rez="success";
+            }
+            filename="/products.html";
+            System.out.println("Add to cart attempt "+rez+" from " + username + getSourceInfo(socket) + " with productId " + productId);
+            //CartAuthenticator authenticator = new CartAuthenticator(new CartRepository());
             //String username="";
-            //System.out.println("Logout attempt from " + getSourceInfo(socket) + " with username " + username);
-            //UserAuthenticator authenticator = new UserAuthenticator(new UserRepository());
-            //authenticator.logout(username);
-            //filename="finished-registration.html";
+            //authenticator.addToCart(username, productId);
+            
         } 
-
-        if(path.startsWith("/products.html")){
+            
+        else if(method.equals("POST")&&path.equals("/checkout")){
+                String productId = "";
+                for (int x=0;x<parser.values.length;x++) {
+                    if (parser.values[x]==null){break;}
+                    else if (parser.values[x].equals("productId")) {
+                        x++;
+                        productId = parser.values[x];
+                    }
+            }
+            System.out.println("Checkout attempt from " + getSourceInfo(socket) + " with productId " + productId);
+            //CartAuthenticator authenticator = new CartAuthenticator(new CartRepository());
+            //String username="";
+            //authenticator.checkout(username, productId);
+            //filename="finished-registration.html";
+            } 
+            
+        else if(method.equals("POST")&&path.equals("/logout")){
+                //String username="";
+                //System.out.println("Logout attempt from " + getSourceInfo(socket) + " with username " + username);
+                //UserAuthenticator authenticator = new UserAuthenticator(new UserRepository());
+                //authenticator.logout(username);
+                //filename="finished-registration.html";
+            } 
+       
+        //HTML-BASED FILE PATHS >> 
+        else if(path.startsWith("/products.html")){
             ProductCatalog productCatalog = new ProductCatalog(new ProductRepository());
             Product[] products = productCatalog.getAllProducts();
-            HTMLDisplay display = new HTMLDisplay(socket);
+
+            HTMLDisplay display = new HTMLDisplay();
+
             StringBuilder html = display.getString(products);
             String productsHtml="";
             filename="products.html";
@@ -187,11 +209,11 @@ public class ClientHandler implements Runnable {
             parser.sendResponse("200 OK", "text/html", finalHTML);
             System.out.println("Products page requested from " + getSourceInfo(socket));
         }
-        //ONLY IF USER IS LOGGED IN IF NOT SAY LOGIN FIRST
+
         else if(path.startsWith("/cart.html")){
             CartViewer cartViewer = new CartViewer(username);
             Product[] cartProducts = cartViewer.displayCart();
-            HTMLDisplay display = new HTMLDisplay(socket);
+            HTMLDisplay display = new HTMLDisplay();
             StringBuilder html = display.getString(cartProducts);
             String cartHtml="";
             filename="cart.html";

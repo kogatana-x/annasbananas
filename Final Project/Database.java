@@ -136,7 +136,7 @@ public class Database {
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
                 String value=parts[0].trim();
-                if (parts[0].trim().equals(row)) {
+                if (value.equals(row)) {
                    String before = String.join(",", Arrays.copyOfRange(parts, 0, fieldIndex));
                     String after = String.join(",", Arrays.copyOfRange(parts, fieldIndex + 1, parts.length));
                     line = before + "," + newValue + "," + after;
