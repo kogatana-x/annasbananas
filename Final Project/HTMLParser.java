@@ -2,30 +2,35 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.lang.reflect.Array;
 import java.net.Socket;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class HTMLParser{
     private Socket socket;
-    private String method;
-    private String path;
-    private String cookie;
+    private String method="";
+    private String path="";
+    private String cookie="";
+    private String cookieString="";
     private OutputStream output;
     private BufferedReader reader;
     private String line;
+    public boolean setCookie=false;
+    //private Database CookieDB = new Database("sessions.txt");
     public ArrayList<String> values;
     
     public HTMLParser(Socket socket){
-        this.socket=socket;
+       this.socket=socket;
         try{
             reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             line = reader.readLine();
+            //output=socket.getOutputStream();
+
         } catch (IOException ex) {
             System.out.println("Server exception: " + ex.getMessage());
             ex.printStackTrace();
@@ -40,19 +45,6 @@ public class HTMLParser{
         if (line == null) {
             String[] msg={"error"};
             return msg;
-        }
-        else if (line.startsWith("Cookie:")) {
-            // Extract the cookie value
-            parts = line.split(":");
-            if (parts.length > 1) {
-                String cookies = parts[1].trim();
-                for (String cookie : cookies.split(";")) {
-                    if (cookie.startsWith("session=")) {
-                        this.cookie = cookie.split("=")[1];
-                        break;
-                    }
-                }
-            }
         }
         // Parse the requested path from the first line
         else{
@@ -111,9 +103,18 @@ public class HTMLParser{
         ArrayList<String> parts=new ArrayList<String>();
 
         for (String pair : pairs) {
+            String[] temp2 = pair.split("\n");
+            for(String part:temp2){
+                if(part.contains("Cookie:")){
+                    //System.out.println(part);
+                    this.cookie=part.substring(16);
+                    this.cookieString="Set-Cookie: session="+this.cookie+"; Max-Age=31536000; Path=/; SameSite=Lax";
+                    //System.out.println("COOKIE: "+this.cookie);
+                }
+            }
             String[] temp = pair.split("="); 
             for(String part:temp){
-                //System.out.println(part);
+               // System.out.println(part);
                 try{
                    parts.add(URLDecoder.decode(part, StandardCharsets.UTF_8.name()).trim());
                 } 
@@ -139,48 +140,92 @@ public class HTMLParser{
         return this.path;
     }
     
-    public void sendResponse(String status, String contentType, String body) {
-        try {
-            OutputStream output = socket.getOutputStream();
-            PrintWriter writer = new PrintWriter(output, true);
-    
-            writer.println("HTTP/1.1 " + status);
-            writer.println("Content-Type: " + contentType);
-            writer.println("Content-Length: " + body.length());
-            writer.println(); // blank line between headers and content
-            writer.println(body);
-        } catch (IOException e) {
-            e.printStackTrace();
+    public void sendResponse(String status, String contentType, byte[] body) {
+        try{
+            output = socket.getOutputStream();
+            boolean isBinary = contentType.startsWith("image/");
+            StringBuilder html = new StringBuilder();
+            html.append("HTTP/1.1 " + status+"\r\n");
+            html.append("Content-Type: " + contentType+"; charset=UTF-8\r\n");
+            html.append("Content-Length: " + body.length+"\r\n");
+            if(!this.cookie.equals("")){
+                html.append(this.cookieString+"\r\n");
+            }
+            html.append("\r\n"); // blank line between headers and content
+            byte[] headerBytes = html.toString().getBytes();
+            output.write(headerBytes);
+            if (isBinary) {
+                // Write the binary data directly to the output
+                output.write(body);
+            } else {
+                if(!cookie.equals("")){
+                    String navbar="<a href=\"login.html\" class=\"login\" style=\"float: right; display: block; color: black; text-align: center; padding: 14px 16px; text-decoration: none; font-size: 17px;\">Login</a>";
+                    String newnavbar="<a href=\"logout\" class=\"login\" style=\"float: right; display: block; color: black; text-align: center; padding: 14px 16px; text-decoration: none; font-size: 17px;\">Logout</a>";
+                    String file=new String(body);
+                    file=file.replace(navbar,newnavbar);
+                    output.write(file.getBytes());
+                }
+                else{output.write(body);} // Write the text data directly to the output
+                // Write the text data directly to the output
+            }
+        }catch(IOException e){
+            System.out.println("Error sending response: " + e.getMessage());
         }
+    }
+    
+    public byte[] readImage(String filename){
+        try{
+            byte[] file= Files.readAllBytes(Paths.get("html/" + filename));
+            return file;
+             
+        }
+        catch(InvalidPathException x){
+            System.out.println("File not found: " + x.getMessage());
+            byte[] body=readImage("404.html");
+            sendResponse("404 Not Found", "text/html",body );
+        }catch(NoSuchFileException e){
+            System.out.println("File not found: " + e.getMessage());
+            byte[] body=readImage("404.html");
+            sendResponse("404 Not Found", "text/html", body);
+        }catch (IOException ex) {
+            System.out.println("Server exception: " + ex.getMessage());
+            ex.printStackTrace();
+        }
+        return null;
+    }
+    
+    public String readFile(String filename){
+        return new String(readImage(filename));
     }
 
     public void redirect(String location) {
         try {
-            OutputStream output = socket.getOutputStream();
-            PrintWriter writer = new PrintWriter(output, true);
-    
-            writer.println("HTTP/1.1 302 Found");
-            writer.println("Location: " + location);
-            writer.println(); // blank line between headers and content
+            output = socket.getOutputStream();
+            StringBuilder html = new StringBuilder();
+            html.append("HTTP/1.1 302 Found\r\n");
+            html.append("Location: " + location + "\r\n");
+            html.append("\r\n"); // blank line between headers and content
+            byte[] headerBytes = html.toString().getBytes();
+            output.write(headerBytes);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error sending redirect: " + e.getMessage());
         }
     }
 
     public String getCookie(){
         return this.cookie;
     }
-    public void setCookie(User user){
-        // Set a cookie with the session key
-        String response = "HTTP/1.1 200 OK\r\n" +
-                        "Set-Cookie: session=" + user.getCart() + "\r\n" +
-                        "\r\n";
-        try{
-            output.write(response.getBytes(StandardCharsets.UTF_8));
-        }
-        catch(IOException ex){
-            System.out.println("Server exception: " + ex.getMessage());
-            ex.printStackTrace();
-        }
+
+    public void setCookie(String cookie, int age){
+        this.cookie=cookie;
+        this.cookieString="Set-Cookie: session="+this.cookie+"; Max-Age=age; Path=/; SameSite=Lax";
+        this.setCookie=true;
     }
+
+    public String replace(String filename, String old, String newString){
+        String file=readFile(filename);
+        String newFile=file.replace(old,newString);
+        return newFile;
+    }
+
 }

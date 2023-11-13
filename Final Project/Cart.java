@@ -16,7 +16,7 @@ public class Cart {
         //find cart for user name. status must be false
         String[] cart=CartRepository.getCart(username);
         if(cart==null||cart[0].equals("error")){
-            this.cartID=CartRepository.add(username,numberOfProducts);
+            this.cartID=CartRepository.add(username,Integer.toString(numberOfProducts),"0");
         }
         else{
             this.cartID=cart[0];

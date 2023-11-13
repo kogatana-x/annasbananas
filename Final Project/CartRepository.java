@@ -6,6 +6,7 @@
  */
 public class CartRepository {
     private String filename="carts.txt";
+    private int numberOfProducts=8;
     private Database CartDatabase = new Database(filename);
     ProductCatalog productCatalog = new ProductCatalog(new ProductRepository());
 
@@ -38,12 +39,18 @@ public class CartRepository {
      *            PQ - the product-quantity pairs for the cart
      * Returns: the index of the cart that was added
      */
-    public String add(String username, int mProd){
+    public String add(String username, String mProd,String mQuant){
         String index=nextID();
+        int quantity=Integer.parseInt(mQuant);
+        int productID=Integer.parseInt(mProd);
         String row=index+","+username+",false";
-        for(int x=0; x<mProd;x++){
-            row+=",0";
+        for(int x=0; x<=numberOfProducts;x++){
+            if(x==productID){
+                row+=","+quantity;
+            }
+            else{row+=",0";}
         }
+        System.out.println(row);
         CartDatabase.add(row);
         return index;
     }

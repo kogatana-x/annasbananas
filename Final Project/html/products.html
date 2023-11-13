@@ -2,6 +2,11 @@
 <html>
 <head>
     <title>Anna's Bananas - Product Search</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="manifest" href="site.webmanifest">
+
     <style>
         body {
             display: flex;
@@ -26,6 +31,17 @@
         .product-grid img {
             max-width: 100%;
             height: auto;
+        }
+        #popup {
+            display: none; 
+            position: fixed; 
+            top: 20px; 
+            right: 20px; 
+            background: #A0522D; 
+            color: white; 
+            padding: 10px; 
+            border-radius: 5px;
+            z-index: 1000;
         }
     </style>
 </head>
@@ -61,18 +77,20 @@
     </div>-->
     <h1>Products</h1>
     <img src="annasbananaslogo3.png" alt="Banana" style="display: block; margin-left: auto; margin-right: auto; width: 15%;">
+    <div id="popup">Item added to cart</div>
+
     <div id="product-list"></div>
-    <div id="test"></div>
     <div id=alert></div>
 </body>
 <script>
     if (new URL(window.location.href).searchParams.get('showAlert') === 'true') {
-        alert('You need to be logged in to checkout.');
+        alert('You need to be logged in to add items to cart.');
+        url.searchParams.delete('showAlert');
+         // Redirect to the new URL
+        window.location.href = url.toString();
     }
     document.querySelectorAll('.add-to-cart').forEach(button => {
         button.addEventListener('click', function() {
-            var productId = this.getAttribute('data-product-id');
-    
             fetch('/add-to-cart', {
                 method: 'POST',
                 headers: {
@@ -82,7 +100,11 @@
             })
             .then(response => response.json())
             .then(data => {
+                document.getElementById('popup').style.display = 'block';
                 console.log('Success:', data);
+                setTimeout(function() {
+                    document.getElementById('popup').style.display = 'none';
+                }, 5000); // Change this to the desired duration in milliseconds
             })
             .catch((error) => {
                 console.error('Error:', error);

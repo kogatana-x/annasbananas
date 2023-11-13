@@ -2,10 +2,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.List;
 
 public class Database {
     public String filepath="database/"; //name of the database file
@@ -101,8 +98,7 @@ public class Database {
     public int getNumberOfRows(){
         int count=1;
         try (BufferedReader reader = new BufferedReader(new FileReader(filepath))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
+            while ((reader.readLine()) != null) {
                 count++;
             }
         } catch (IOException e) {
