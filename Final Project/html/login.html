@@ -71,4 +71,13 @@
     </form>
 
 </body>
+<script>
+    window.onload = function() {
+        var showAlert = new URL(window.location.href).searchParams.get('showAlert');
+        console.log('showAlert:', showAlert);
+        if (showAlert === 'true') {
+            alert('Login Failed. Username or password is incorrect');
+        }
+    }
+</script>
 </html>

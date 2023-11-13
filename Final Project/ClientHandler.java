@@ -52,83 +52,94 @@ public class ClientHandler implements Runnable {
 
         //REQUEST/FORM BASED PATHS >> 
         if(method.equals("POST")&&path.equals("/register")){
-            String username="",password="",firstname="",lastname="";
-            for (int x=0;x<parser.values.length;x++) {
-                if (parser.values[x]==null){break;}
-                else if (parser.values[x].equals("username")) {
+            String password="",firstname="",lastname="";
+            path="/register.html";
+            method="GET";
+            if (parser.values==null){return;}
+
+            for (int x=0;x<parser.values.size();x++) {
+                //System.out.println(parser.values.get(x));
+
+                if (parser.values.get(x).contains("username")) {
                     x++;
-                    username = parser.values[x];
-                } else if (parser.values[x].equals("password")) {
+                    username = parser.values.get(x);
+                } else if (parser.values.get(x).contains("password")) {
                     x++;
-                    password = parser.values[x];
-                } else if (parser.values[x].equals("firstname")) {
+                    password = parser.values.get(x);
+                } else if (parser.values.get(x).contains("firstname")) {
                     x++;
-                    firstname = parser.values[x];
-                } else if (parser.values[x].equals("lastname")) {
+                    firstname = parser.values.get(x);
+                } else if (parser.values.get(x).contains("lastname")) {
                     x++;
-                    lastname = parser.values[x];
+                    lastname = parser.values.get(x);
                 }
            }
            UserAuthenticator authenticator = new UserAuthenticator(new UserRepository());
            result=authenticator.register(username,password,firstname,lastname);
            String res;
-           if(result){res="success";}else{res="failure";}
-           System.out.println("Registration attempt "+res+" from " + getSourceInfo(socket) + " with username " + username);
-           filename="finished-registration.html"; //TODO add a page for failed login and update username if logged in
-           //NOTE: does not auto-login with new user account
+            if(result){
+                res="success";
+               filename="finished-registration.html"; 
+            }
+            else{
+                res="failure";
+                path="/register.html?showAlert=true";
+                parser.redirect(path);
+            }
+           System.out.println("Registration attempt "+res+" from " + getSourceInfo(socket) + " with " + username);
         } 
         
         else if(method.equals("POST")&&path.equals("/login")){
-            String username="",password="";
-            for (int x=0;x<parser.values.length;x++) {
-                if (parser.values[x]==null){break;}
-                else if (parser.values[x].equals("username")) {
+            String password="";
+            for (int x=0;x<parser.values.size();x++) {
+                if (parser.values.get(x)==null){break;}
+                else if (parser.values.get(x).equals("username")) {
                     x++;
-                    username = parser.values[x];
-                } else if (parser.values[x].equals("password")) {
+                    username = parser.values.get(x);
+                } else if (parser.values.get(x).equals("password")) {
                     x++;
-                    password = parser.values[x];
+                    password = parser.values.get(x);
                 } 
            }
            UserAuthenticator authenticator = new UserAuthenticator(new UserRepository());
            String res;
            result=authenticator.login(username, password);
            if(result){
-            res="success";
+                res="success";
+                filename="index.html";
             }
             else{
                 res="failure";
+                path="/login.html?showAlert=true";
+                parser.redirect(path);
             }
            System.out.println("Login attempt "+res+" from " + getSourceInfo(socket) + " with username " + username);
-        
-           filename="index.html"; //TODO add a page for failed login and update username if logged in
-
         } 
         
         //CAN ONLY DO THESE W/ A LOGGED IN USER
-        if(method.equals("POST")&&path.equals("/payments")){
+        else if(method.equals("POST")&&path.equals("/payments")){
                 String cardNumber = "";
                 String cardName = "";
                 String cardExpiry = "";
                 String cardCVC = "";
                 String cardZip = "";
-                for (int x=0;x<parser.values.length;x++) {
-                    if (parser.values[x]==null){break;}
-                    else if (parser.values[x].equals("cardNumber")) {
+                for (int x=0;x<parser.values.size();x++) {
+                    if (parser.values.get(x)==null){break;}
+                    else if (parser.values.get(x).equals("cardNumber")) {
                         x++;
-                        cardNumber = parser.values[x];
-                    } else if (parser.values[x].equals("cardName")) {
+                        cardNumber = parser.values.get(x);
+                    } else if (parser.values.get(x).equals("cardName")) {
                         x++;
-                        cardName = parser.values[x];
-                    } else if (parser.values[x].equals("cardExpiry")) {
+                        cardName = parser.values.get(x);
+                    } else if (parser.values.get(x).equals("cardExpiry")) {
                         x++;
-                        cardExpiry = parser.values[x];
-                    } else if (parser.values[x].equals("cardCVC")) {
+                        cardExpiry =parser.values.get(x);
+                    } else if (parser.values.get(x).equals("cardCVC")) {
                         x++;
-                        cardCVC = parser.values[x];
-                    } else if (parser.values[x].equals("cardZip")) {
+                        cardCVC = parser.values.get(x);
+                    } else if (parser.values.get(x).equals("cardZip")) {
                         x++;
-                        cardZip = parser.values[x];
+                        cardZip = parser.values.get(x);
                     }
             }
                     System.out.println("Payment attempt from " + getSourceInfo(socket) + " with card number " + cardNumber);
@@ -150,11 +161,11 @@ public class ClientHandler implements Runnable {
                 parser.redirect(path);
             }
             else{
-                for (int x=0;x<parser.values.length;x++) {
-                    if (parser.values[x]==null){break;}
-                    else if (parser.values[x].equals("productId")) {
+                for (int x=0;x<parser.values.size();x++) {
+                    if (parser.values.get(x)==null){break;}
+                    else if (parser.values.get(x).equals("productId")) {
                         x++;
-                        productId = parser.values[x];
+                        productId = parser.values.get(x);
                     }
                 }
                 rez="success";
@@ -169,11 +180,11 @@ public class ClientHandler implements Runnable {
             
         else if(method.equals("POST")&&path.equals("/checkout")){
                 String productId = "";
-                for (int x=0;x<parser.values.length;x++) {
-                    if (parser.values[x]==null){break;}
-                    else if (parser.values[x].equals("productId")) {
+                for (int x=0;x<parser.values.size();x++) {
+                    if (parser.values.get(x)==null){break;}
+                    else if (parser.values.get(x).equals("productId")) {
                         x++;
-                        productId = parser.values[x];
+                        productId = parser.values.get(x);
                     }
             }
             System.out.println("Checkout attempt from " + getSourceInfo(socket) + " with productId " + productId);
@@ -226,10 +237,13 @@ public class ClientHandler implements Runnable {
             System.out.println("Products page requested from " + getSourceInfo(socket));
         }
         // Map the requested path to a file
-       
-        else if(filename.equals("garbage")){
-            if (path.endsWith(".html")) {
-                filename = path.substring(1);    
+       //else if(path.startsWith("/register.html")){
+
+       //}
+        if(filename.equals("garbage")){
+            System.out.println("in path thing");
+            if (path.contains(".html")) {
+                filename = path.substring(1,path.indexOf("?"));    
                 mimeType = "text/html";
             } else if (path.endsWith(".css")) {
                 filename = path.substring(1); 
@@ -253,6 +267,7 @@ public class ClientHandler implements Runnable {
                 mimeType = "image/gif";
             }
             else {
+                System.out.println("sending you to index");
                 filename="index.html";
                 mimeType = "text/html";
             }

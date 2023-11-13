@@ -3,11 +3,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.lang.reflect.Array;
 import java.net.Socket;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 
 public class HTMLParser{
     private Socket socket;
@@ -17,7 +19,7 @@ public class HTMLParser{
     private OutputStream output;
     private BufferedReader reader;
     private String line;
-    public String[] values;
+    public ArrayList<String> values;
     
     public HTMLParser(Socket socket){
         this.socket=socket;
@@ -106,34 +108,27 @@ public class HTMLParser{
         String[] pairs=parseRawParameters();
         if(pairs==null||pairs[0].equals("error")){return;}
 
-        int len = pairs.length*2;
+        ArrayList<String> parts=new ArrayList<String>();
 
-        String[] parts=new String[len*6]; //way bigger than it needs to be b/c scanning tests
-        String[] temp=new String[len];
-
-        int x=0;
         for (String pair : pairs) {
-            temp = pair.split("="); 
+            String[] temp = pair.split("="); 
             for(String part:temp){
-                if(!part.equals("=")){
-                    try{
-                        parts[x]= URLDecoder.decode(part, StandardCharsets.UTF_8.name());
-                        x++;
-                    } 
-                    catch (IOException ex) {} 
-                    catch (IllegalArgumentException ex) {}
-                }               
-            }
+                //System.out.println(part);
+                try{
+                   parts.add(URLDecoder.decode(part, StandardCharsets.UTF_8.name()).trim());
+                } 
+                catch (IOException ex) {} 
+                catch (IllegalArgumentException ex) {}
+            }               
         }
-        //print(parts);
-        this.values=parts;
-        
+       // print(parts);
+        this.values=parts;    
     }
-    public void print(String[] parts){
-        for(int x=0;x<parts.length;x++){
-           if(parts[x]==null){return;}
-            else if(x%2==0){System.out.print(parts[x]+"=");} 
-           else{System.out.println(parts[x]);}
+    public void print(ArrayList<String> parts){
+        for(int x=0;x<parts.size();x++){
+           if(parts.get(x)==null){return;}
+            else if(x%2==0){System.out.print(parts.get(x)+"=");} 
+           else{System.out.println(parts.get(x));}
         }
     }
 
