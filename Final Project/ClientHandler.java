@@ -5,7 +5,6 @@ import java.net.Socket;
 
 public class ClientHandler implements Runnable {
     private Socket socket;
-    private String username="";
 
     public ClientHandler(Socket socket) {
         this.socket = socket;
@@ -37,6 +36,14 @@ public class ClientHandler implements Runnable {
             System.out.println(method+" Request from " + getSourceInfo(socket) + " for " + path);
             parser.getValues();
             String cookie=parser.getCookie();
+            String username="";
+
+            User user;
+            if(!cookie.equals("")){
+                UserRepository userRepo = new UserRepository();
+                user=userRepo.getUser(cookie);
+                if(user!=null){username=user.getUsername();}
+            }
 
 
             String filename="garbage";
@@ -147,7 +154,6 @@ public class ClientHandler implements Runnable {
                 }
                         System.out.println("Payment attempt from " + getSourceInfo(socket) + " with card number " + cardNumber);
                         PaymentAuthenticator authenticator = new PaymentAuthenticator(new PaymentRepository());
-                        String username="";
                         authenticator.pay(username, cardNumber, cardName, cardExpiry, cardCVC, cardZip);
                             
                         filename="finished-registration.html";
@@ -181,8 +187,7 @@ public class ClientHandler implements Runnable {
                 filename="/products.html";
                
                 System.out.println("Add to cart attempt "+rez+" from " + username + getSourceInfo(socket) + " with productId " + productId);
-                CartRepository cartRepository = new CartRepository();
-                cartRepository.add(cookie, productId,quantity);
+                
                 
             }      
             else if(method.equals("POST")&&path.equals("/checkout")){ //TODO
@@ -195,7 +200,6 @@ public class ClientHandler implements Runnable {
                         }
                 }
                 System.out.println("Checkout attempt from " + getSourceInfo(socket) + " with productId " + productId);
-                //CartAuthenticator authenticator = new CartAuthenticator(new CartRepository());
                 //String username="";
                 //authenticator.checkout(username, productId);
                 //filename="finished-registration.html";
@@ -222,15 +226,15 @@ public class ClientHandler implements Runnable {
             }
 
             else if(path.startsWith("/cart.html")){
-                CartViewer cartViewer = new CartViewer(username);
-                Product[] cartProducts = cartViewer.displayCart();
+                CartBuilder cart = new CartBuilder(username);
+                Product[] cartProducts = cart.displayCart();
                 HTMLDisplay display = new HTMLDisplay();
                 StringBuilder html = display.getString(cartProducts);
                 String cartHtml="";
                 filename="cart.html";
                 mimeType = "text/html";
                 cartHtml = parser.readFile(filename);
-                String finalHTML = cartHtml.replace("<div id=\"product-list\"></div>", html.toString());
+                String finalHTML = cartHtml.replace("<div id=\"cart-list\"></div>", html.toString());
                 body=finalHTML.getBytes();
             }
 

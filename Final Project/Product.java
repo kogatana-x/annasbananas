@@ -3,73 +3,21 @@
  * Parameters: none
  * Relationships: none
  */
-public class Product {
-    private String id;
-    private String type;
-    private String name;
-    private String description;
-    private double price;
-    private String unit;
-    private int quantity;
-    private String image;
-
-    public Product (String id, String type, String name, String description, double price, String unit, int quantity, String image) {
-        this.id = id;
-        this.type = type;
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.unit = unit;
-        this.quantity = quantity;
-        this.image = image;
-    }
-
-    public String getId () {
-        return id;
-    }
-    public String getType () {
-        return type;
-    }
-    public String getName () {
-        return name;
-    }
-    public String getDescription () {
-        return description;
-    }
-    public double getPrice () {
-        return price;
-    }
-    public String getUnit () {
-        return unit;
-    }
-    public int getQuantity () {
-        return quantity;
-    }
-    public String getImage () {
-        return image;
-    }
-    public void setId (String id) {
-        this.id = id;
-    }
-    public void setType (String type) {
-        this.type = type;
-    }
-    public void setName (String name) {
-        this.name = name;
-    }
-    public void setDescription (String description) {
-        this.description = description;
-    }
-    public void setPrice (double price) {
-        this.price = price;
-    }
-    public void setUnit (String unit) {
-        this.unit = unit;
-    }
-    public void setQuantity (int quantity) {
-        this.quantity = quantity;
-    }
-    public void setImage (String image) {
-        this.image = image;
-    }
+public interface Product {
+    public String getId ();
+    public String getType (); 
+    public String getName ();
+    public String getDescription ();
+    public double getPrice ();
+    public String getUnit ();
+    public int getQuantity ();
+    public String getImage ();
+    public void setId (String id);
+    public void setType (String type);
+    public void setName (String name);
+    public void setDescription (String description);
+    public void setPrice (double price);
+    public void setUnit (String unit); 
+    public void setQuantity (int quantity);
+    public void setImage (String image);
 }

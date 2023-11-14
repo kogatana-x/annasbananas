@@ -6,6 +6,7 @@
 public class ProductRepository {
     private String filename="products.txt";
     Database ProductDatabase = new Database(filename);
+    ProductFactory ProductFactory = new ProductFactory();
 
     public boolean saveProduct(Product product){
         int index = ProductDatabase.isInDB(product.getId());
@@ -35,7 +36,7 @@ public class ProductRepository {
         String[] parts = ProductDatabase.returnResult(id);
         if(parts==null){return null; }
         if(parts.length>1){
-            return new Product(parts[0], parts[1], parts[2], parts[3], Double.parseDouble(parts[4]), parts[5], Integer.parseInt(parts[6]), parts[7]);
+            return ProductFactory.createProduct(parts);
         }
         return null;
     }

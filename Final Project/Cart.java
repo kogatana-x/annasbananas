@@ -16,7 +16,7 @@ public class Cart {
         //find cart for user name. status must be false
         String[] cart=CartRepository.getCart(username);
         if(cart==null||cart[0].equals("error")){
-            this.cartID=CartRepository.add(username,Integer.toString(numberOfProducts),"0");
+            this.cartID=CartRepository.add(username,Integer.toString(numberOfProducts));
         }
         else{
             this.cartID=cart[0];
@@ -29,16 +29,36 @@ public class Cart {
     public void removeFromCart(String product) {
         CartRepository.update(cartID,product,"0");
     }
+    public void clearCart(){
+        CartRepository.clearCart(this.cartID);
+    }   
 
-    public void updateCart(String product, String quantity) {
+    public void update(String product, String quantity) {
         CartRepository.update(this.cartID, product, quantity);
     }
     public void checkout() {
         CartRepository.checkout(this.cartID);
     }
-    public String[] getCart() {
+    private String[] getCart() {
         String[] cart=CartRepository.getCart(this.cartID);
         return cart;
     }
- 
+
+    public Product[] displayCart(){
+        //takes cart.id and displays all products in cart
+        ProductCatalog pc = new ProductCatalog(new ProductRepository());
+        String[] cartProducts = getCart();
+        if(cartProducts==null||cartProducts[0].equals("error")){
+            return null;
+        }
+        Product[] products = new Product[cartProducts.length];
+        System.out.println("Cart ID: " + cartProducts[0]);
+        for(int x=0; x<cartProducts.length; x++){
+            if(cartProducts[x].equals("0")){
+                continue;
+            }
+            products[x] = pc.getProduct(Integer.toString(x));
+        }
+        return products;
+    }
 }

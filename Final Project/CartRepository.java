@@ -8,29 +8,10 @@ public class CartRepository {
     private String filename="carts.txt";
     private int numberOfProducts=8;
     private Database CartDatabase = new Database(filename);
-    ProductCatalog productCatalog = new ProductCatalog(new ProductRepository());
+   
 
-   
-    public double getTotalPrice(int cartIndex) {
-        double total = 0;
-        String[] list = CartDatabase.returnResult(Integer.toString(cartIndex)); //One row with username and many products
-        Product[] products = toProduct(list);
-        for (Product product : products) {
-            total += product.getPrice()*product.getQuantity();
-        }
-        return total;
-    }
-   
-    private Product[] toProduct(String[] list){
-        Product[] products = new Product[list.length];
-        for(int x=0;x<list.length;x++){
-            String[] temp = list[x].split(",");
-            products[x]=new Product(temp[0], temp[1], temp[2], temp[3], Double.parseDouble(temp[4]), temp[5], Integer.parseInt(temp[6]), temp[7]);
-        }
-        return products;
-    }
     private String nextID(){
-        return Integer.toString(CartDatabase.getNumberOfRows());
+        return Integer.toString(CartDatabase.getNumberOfRows()-1);
     }
 
     /* Name: add
@@ -39,20 +20,22 @@ public class CartRepository {
      *            PQ - the product-quantity pairs for the cart
      * Returns: the index of the cart that was added
      */
-    public String add(String username, String mProd,String mQuant){
-        String index=nextID();
-        int quantity=Integer.parseInt(mQuant);
-        int productID=Integer.parseInt(mProd);
-        String row=index+","+username+",false";
-        for(int x=0; x<=numberOfProducts;x++){
-            if(x==productID){
-                row+=","+quantity;
-            }
-            else{row+=",0";}
+    public String add(String username, String mProd){
+        String in=nextID();
+        int mprod=Integer.parseInt(mProd);
+
+        String row = "";
+        row=row+in;
+        row=row+",";
+        row=row+username.trim();
+        row=row+",false";
+
+        for(int x=0; x<=mprod;x++){
+            row=row+",0";
         }
-        System.out.println(row);
+        //System.out.println(row);
         CartDatabase.add(row);
-        return index;
+        return in;
     }
 
     /* Name: update
@@ -72,11 +55,11 @@ public class CartRepository {
      *             product - the product to delete
      * Returns: true if the delete was successful, false otherwise
      */
-    public boolean delete(int cartIndex,int product){
-        boolean result=CartDatabase.update(Integer.toString(cartIndex),Integer.toString(product),"0");
-        return result;
+    public void clearCart(String cartIndex){
+        for(int x=0;x<=numberOfProducts;x++){
+            CartDatabase.update(cartIndex,Integer.toString(x),"0");
+        }
     }
-
 
     /* Name: checkout
      * Description: Checks out the cart. Sets the status to true
