@@ -5,6 +5,7 @@
  */
 public class Logger {
     private static Logger instance;
+    Database logDatabase = new Database("logs/log.txt");
 
     private Logger() {}
 

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Anna's Bananas - Order Processing</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="manifest" href="site.webmanifest">
+
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #fffacd;
+            font-family: Arial, sans-serif;
+        }
+        form {
+            width: 100%;
+            max-width: 500px;
+            padding: 15px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        input[type="text"], input[type="submit"] {
+            width: 90%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        input[type="submit"] {
+            background-color: #FFD700;
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: block;
+            margin: 0 auto;
+        }
+        @media (max-width: 600px) {
+            form {
+                width: 100%;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <form action="/address" method="POST">
+        <h2>Anna's Bananas</h2>
+        <img src="annasbananaslogo3.png" alt="Banana" style="display: block; margin-left: auto; margin-right: auto; width: 45%">
+
+        <h3>Order Processing</h3>
+        <p style="font-size:small">Please enter the address to send your order to. Once you submit, you will be taken to our secure third party payment processor.</p>
+        <label for="street-address-1">Street Address Line 1:</label>
+        <input type="text" id="street-address-1" name="street-address-1" required>
+
+        <label for="street-address-2">Street Address Line 2:</label>
+        <input type="text" id="street-address-2" name="street-address-2">
+    
+        <label for="city">City:</label>
+        <input type="text" id="city" name="city" required>
+    
+        <label for="zipcode">Zipcode:</label>
+        <input type="text" id="zipcode" name="zipcode" required>
+    
+        <label for="state">State:</label>
+        <input type="text" id="state" name="state" required>
+    
+        <label for="country">Country:</label>
+        <input type="text" id="country" name="country" required>
+    
+        <input type="submit" value="Submit Order">
+    </form>
+</body>
+<script>
+    if (new URL(window.location.href).searchParams.get('showAlert') === 'true') {
+        alert('Please login before accessing the cart.');
+        url.searchParams.delete('showAlert');
+         // Redirect to the new URL
+        window.location.href = url.toString();
+    }
+
+</script>
+</html>

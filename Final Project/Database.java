@@ -207,7 +207,7 @@ public class Database {
             e.printStackTrace();
         }
     }
-    private void print(String[] parts){
+    /* private void print(String[] parts){
         System.out.println("(Database) DATABASE DEBUGGER for "+filepath+" :");
         System.out.println("(Database)Row Length="+parts.length);
         //int y=0;
@@ -217,6 +217,6 @@ public class Database {
         }
         System.out.println();
         //System.out.println("(Database)Counted Row Length="+y);
-    }
+    } */
 
 }

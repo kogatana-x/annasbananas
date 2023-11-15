@@ -69,9 +69,9 @@ public class User {
         String hex = String.format("%0" + (hash.length << 1) + "x", bi);
         return hex;
     }
-    private byte[] hashDecode(String string){
+    /*private byte[] hashDecode(String string){
         return new BigInteger(string, 16).toByteArray();
-    }
+    } */
 
     public void newCart() {
         this.skey = this.username+(this.counter+1);

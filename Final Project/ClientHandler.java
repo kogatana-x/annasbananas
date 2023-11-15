@@ -97,8 +97,8 @@ public class ClientHandler extends Thread {
                 result=authenticator.login(username, password);
                 if(result){
                     res="success";
-                    filename="/cart.html";
-                    path="/cart.html";
+                    filename="/products.html";
+                    path="/products.html";
                     parser.setCookie(username,31536000);
                 }
                 else{
@@ -163,11 +163,11 @@ public class ClientHandler extends Thread {
                 result=cart.checkout();
                 if(result){
                     res="success";
-                    parser.setCookie(username,31536000);
-                    path="http://"+socket.getLocalAddress().toString()+":8081/payments.html";
-                    System.out.println("PATH REDIRECT TO: "+path);
+                    path="/address.html";
+                    filename="/address.html";
+                    mimeType = "text/html";
+                    body=parser.readImage(filename);
                     parser.redirect(path);
-                    return;
                 }
                 else{
                     res="failure";
@@ -181,7 +181,7 @@ public class ClientHandler extends Thread {
                 //filename="finished-registration.html";
                 } 
                 
-            else if(method.equals("GET")&&path.equals("/logout")){
+            else if(path.equals("/logout")){
                 System.out.println("Logout from " + getSourceInfo(socket) + " with username " + username);
                 parser.setCookie(username,0);
                 filename="/login.html";
@@ -191,6 +191,70 @@ public class ClientHandler extends Thread {
                 return;
             } 
         
+            else if(method.equals("POST")&&path.equals("/address")){
+                String address1="";
+                String address2="";
+                String city="";
+                String state="";
+                String zip="";
+                String country="";
+
+                if(cookie.equals("")){
+                    //NEED TO BE LOGGED IN: 
+                    path="/address.html?showAlert=true";
+                    parser.redirect(path);
+                }
+                else{
+                    for (int x=0;x<parser.values.size();x++) {
+                        if (parser.values.get(x)==null){break;}
+                        else if (parser.values.get(x).equals("street-address-1")) {
+                            x++;
+                            address1 = parser.values.get(x);
+                        }
+                        else if (parser.values.get(x).equals("street-address-2")) {
+                            x++;
+                            address2 = parser.values.get(x);
+                        }
+                        else if(parser.values.get(x).equals("city")){
+                            x++;
+                            city=parser.values.get(x);
+                        }
+                        else if(parser.values.get(x).equals("state")){
+                            x++;
+                            state=parser.values.get(x);
+                        }
+                        else if(parser.values.get(x).equals("zipcode")){
+                            x++;
+                            zip=parser.values.get(x);
+                        }
+                        else if(parser.values.get(x).equals("country")){
+                            x++;
+                            country=parser.values.get(x);
+                        }
+                    }
+                    parser.setCookie(username,31536000);
+
+                    AddressRepository addressRepo = new AddressRepository();
+                    addressRepo.saveAddress(new Address(username,address1,address2,city,state,zip,country));
+                    parser.setCookie(username,31536000);
+
+                    path="http://"+socket.getLocalAddress().toString()+":8081/payments.html";
+                    System.out.println("PATH REDIRECT TO: "+path);
+                    parser.redirect(path);
+                    return;
+                }
+                System.out.println("Checkout-Address attempt from " + username +" "+ getSourceInfo(socket));
+                
+            } 
+            else if(method.equals("POST")&&path.equals("/payment")){
+                String address="";
+                String city="";
+                String state="";
+                String zip="";
+                String country="";
+                String card="";
+                String exp="";
+            }
             //HTML-BASED FILE PATHS >> 
             if(path.startsWith("/products.html")){
                 ProductCatalog productCatalog = new ProductCatalog(new ProductRepository());

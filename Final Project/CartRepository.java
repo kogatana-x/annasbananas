@@ -26,7 +26,8 @@ public class CartRepository {
 
         //If there is an existing cart and if status is false - return cart ID
         String returnResult=CartDatabase.returnResultRow("1",username);
-        //String status=CartDatabase.returnFieldValue(returnResult, 2);
+        //String status=CartDatabase.returnFieldValue(returnResult, 2); 
+        //TODO - MAKE NEW CART IF STATUS IS TRUE
         String[] cart=returnResult.split(",");
         //System.out.println("(Cart Repository) Cart ID: "+cart[0]);
         if(!cart[0].equals("error")){return cart[0];}
