@@ -55,11 +55,11 @@ class UserAuthenticator {
     }
 
     /* Name: generateSalt
-     * Description: Generates a random salt
+     * Description: Generates a random salt. Note, made public for the JUnit tests
      * Parameters: none
      * Returns: the salt
      */
-    private byte[] generateSalt() {
+    public byte[] generateSalt() {
         SecureRandom random = new SecureRandom(); //the random number generator to use
         byte[] salt = new byte[16]; //the salt to return
         random.nextBytes(salt); //Generate the salt

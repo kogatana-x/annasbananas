@@ -9,6 +9,7 @@
 
 //IMPORTS
 import java.io.BufferedReader; //for reading input
+import java.io.ByteArrayOutputStream;
 import java.io.IOException; //for input/output exceptions
 import java.io.InputStreamReader; //for reading input
 import java.io.OutputStream; //for writing output
@@ -112,7 +113,7 @@ public class HTMLParser{
      * Parameters: none
      * Returns: pairs - an array of strings containing the parameters
      */
-    private String[] parseRawParameters(){
+    public String[] parseRawParameters(){
         //parseRawStrings();
         
         // Read the headers and the blank line
@@ -355,6 +356,34 @@ public class HTMLParser{
         String file=readFile(filename); //Read the file
         String newFile=file.replace(old,newString); //Replace the string
         return newFile; //Return the new file
+    }
+
+
+    /* Name: setLine
+     * Description: This method returns the current line of input. Used for JUnit tests only
+     * Parameters: line - a string containing the current line of input
+     * Returns: None
+     */
+    public void setLine(String line){
+        this.line=line;
+    }
+
+    /* Name: setReader
+     * Description: This method returns the current line of input. Used for JUnit tests only
+     * Parameters: reader - a buffered reader object containing the current line of input
+     * Returns: None
+     */
+    public void setReader(BufferedReader reader){
+        this.reader=reader;
+    }
+
+    /* Name: setReader
+     * Description: This method returns the current line of output. Used for JUnit tests only
+     * Parameters: output - a ByteArrayOutputStream object containing the current line of output
+     * Returns: None
+     */
+    public void setOutput(ByteArrayOutputStream output){
+        this.output=output;
     }
 
 }
