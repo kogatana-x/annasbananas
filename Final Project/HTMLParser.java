@@ -63,6 +63,12 @@ public class HTMLParser{
         }
         
     }
+    /* Name: HTMLParser
+     * Description: HTMLParser constructor made for the JUnit Tests
+     */
+    public HTMLParser(String directory){
+        this.directory=directory;
+    }
 
     //STEP 1 - Extract Raw Request Info
     /* Name: parseRaw
@@ -130,7 +136,9 @@ public class HTMLParser{
                 String[] pairs = requestBody.toString().split("&"); //Split the input into pairs
                 return pairs; //Return the pairs
             }while(!line.equals("")); //While there is input
-        } catch (IOException ex) { //If there is an error, return 'error'
+        } 
+        catch (NullPointerException x){return null;}
+        catch (IOException ex) { //If there is an error, return 'error'
             String[] error={"error"};
              return error;
         }
@@ -209,9 +217,9 @@ public class HTMLParser{
      * Parameters: status - the HTTP status code (e.g., 200 OK, 404 Not Found, etc.)
      *             contentType - the content type (mimeType)
      *             body - the body of the response as a byte array
-     * Returns: none
+     * Returns: boolean if sent or not
      */
-    public void sendResponse(String status, String contentType, byte[] body) {
+    public boolean sendResponse(String status, String contentType, byte[] body) {
         try{ //Try to send the response
             output = socket.getOutputStream(); //Initialize the output stream
             boolean isBinary = contentType.startsWith("image/");         //Check if the content type is binary
@@ -251,11 +259,14 @@ public class HTMLParser{
                 else{output.write(body);} // Write the text data directly to the output
                 // Write the text data directly to the output
             }
+            return true;
         } 
-        catch (NullPointerException x){} //If there is an error, handle silently
+        catch(StackOverflowError x){return false;}
+        catch (NullPointerException x){return false;} //If there is an error, handle silently
         catch(IOException e){ //If there is an error, print it
             logger.logError("HTMLParser","Error sending response: " + e.getMessage());
             //System.out.println("Error sending response: " + e.getMessage());
+            return false;
         }
     }
     
@@ -265,6 +276,7 @@ public class HTMLParser{
             return file; 
              
         }
+        catch(StackOverflowError x){}
         //Log the error and send a 404 respone instead
         catch(InvalidPathException x){ 
             logger.logError("HTMLParser","Invalid path requested: " + x.getMessage());

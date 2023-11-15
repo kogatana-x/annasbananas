@@ -16,10 +16,25 @@
 public class ProductRepository {
     //GLOBAL VARIABLES
     private String filename="products.txt"; //The name of the file to store the products in
-    Database ProductDatabase = new Database(filename);//The database to store the products in
-    ProductFactory ProductFactory = new ProductFactory();//The factory to create products
+    private ProductFactory ProductFactory = new ProductFactory();//The factory to create products
+    private Database ProductDatabase;
 
 
+    /* Name: ProductRepository
+     * Description: The constructor for the ProductRepository class
+     */
+    public ProductRepository(){
+        filename="products.txt"; 
+        ProductDatabase = new Database(filename);//The database to store the products in
+    }
+
+    /* Name: ProductRepository
+     * Description: The constructor for the ProductRepository class. Used for JUnit testing
+     */
+    public ProductRepository(String filename){
+        this.filename=filename;
+        ProductDatabase = new Database(filename);
+    }
     /* Name: saveProduct
      * Description: Saves a product to the database
      * Parameters: product - the product to save

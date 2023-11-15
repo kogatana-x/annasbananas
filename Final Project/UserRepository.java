@@ -15,9 +15,23 @@
  * Relationships: has a Database 
  */
 class UserRepository {
-    private String filename="users.txt"; //The name of the file to store the users in
-    Database UserDatabase = new Database(filename); //The database to store the users in
+    private String filename; //The name of the file to store the users in
+    Database UserDatabase; //The database to store the users in
 
+    /* Name: UserRepository
+     * Description: The constructor for the UserRepository class
+     */
+    public UserRepository(){
+        filename="users.txt";
+        UserDatabase = new Database(filename);
+    }
+    /* Name: UserRepository
+     * Description: The constructor for the UserRepository class. Used for JUnit testing
+     */
+    public UserRepository(String filename){
+        this.filename=filename;
+        UserDatabase = new Database(filename);
+    }
     /* Name: saveUser
      * Description: Saves a user to the database
      * Parameters: user - the user to save
@@ -45,7 +59,7 @@ class UserRepository {
         String[] parts=partString.split(","); //Split the user into its parts
         if(parts==null){return null; } //If the user does not exist, return null
         if(parts.length>1){ //If the user exists, return it
-            return new User(parts[0], parts[1], parts[2], parts[3], parts[4],parts[5]); //Return the user
+            return new User(parts[0], parts[1], parts[2], parts[3], parts[4],""); //Return the user
         }
         return null;  
     }

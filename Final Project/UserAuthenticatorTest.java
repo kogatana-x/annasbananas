@@ -8,21 +8,21 @@ public class UserAuthenticatorTest {
 
     @Before
     public void setUp() {
-        userRepository = new UserRepository();
+        userRepository = new UserRepository("testusers.txt");
         userAuthenticator = new UserAuthenticator(userRepository);
     }
 
     @Test
     public void testRegister() {
-        assertTrue(userAuthenticator.register("testuser", "testpassword", "Test", "User"));
-        assertNotNull(userRepository.getUser("testuser"));
+        assertTrue(userAuthenticator.register("0testuser", "testpassword", "Test", "User"));
+        assertNotNull(userRepository.getUser("0testuser"));
     }
 
     @Test
     public void testLogin() {
-        userAuthenticator.register("testuser", "testpassword", "Test", "User");
-        assertTrue(userAuthenticator.login("testuser", "testpassword"));
-        assertFalse(userAuthenticator.login("testuser", "wrongpassword"));
+        userAuthenticator.register("1testuser", "testpassword", "Test", "User");
+        assertTrue(userAuthenticator.login("1testuser", "testpassword"));
+        assertFalse(userAuthenticator.login("1testuser", "wrongpassword"));
         assertFalse(userAuthenticator.login("nonexistentuser", "password"));
     }
 
