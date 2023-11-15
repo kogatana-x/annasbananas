@@ -36,6 +36,7 @@ Note: the cart functionality is not available until the user has logged in.
 
 ## JUnit Tests
 JUnit tests have been built out for critical program functions for the Database, PaymentRepository, ProductRepository, User Repository, User Authenticator, and HTML Parser classes. These tests use 'fake' databases that need to be deleted before/after each test.
+
 ![junit](README/JUnitTests.png)
 
 
