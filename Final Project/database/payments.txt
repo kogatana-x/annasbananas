@@ -1,3 +1,3 @@
-id, usernameid, ccn, cvv, expiry
-test,,12335235,02/2021,123,12345
-test,,12335235,02/2021,123,12345
+usernameid, ccn, cvv, expiry
+test,12335235,02/2021,123,12345
+bonzi,12345678,02/2021,123,12345

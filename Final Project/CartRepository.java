@@ -1,8 +1,16 @@
-/* Name: OrderProcessor
- * Description: Processes orders
- * Parameters: cart - the cart to process
- *             paymentProcessor - the payment processor to use to process payments
- * Relationships: Uses the Cart and PaymentProcessor classes
+//-------------------------------------------------------
+/* Name: Anna Andler
+ * Class: SE 450
+ * Date: 11/15/2023
+ * Project: Final Project - eCommerce Site (Anna's Bananas)
+ * File Name: CartRepository.java
+ */
+//-------------------------------------------------------
+
+/* Name: CartRepository
+ * Description: The repository for carts. "Order Processor"
+ * Parameters: none
+ * Relationships: has a Database
  */
 public class CartRepository {
     private String filename="carts.txt";
@@ -22,7 +30,6 @@ public class CartRepository {
      */
     public String setup(String username){
         if(username.equals("")){return "";}
-        //System.out.println("(Cart Repository)SETTING UP CART FOR: "+username);
 
         //If there is an existing cart and if status is false - return cart ID
         String returnResult=CartDatabase.returnResultRow("1",username);

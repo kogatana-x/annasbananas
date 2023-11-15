@@ -1,1 +1,3 @@
 username, street1, street2, city, state, zip, countrytest,,Street,Line,2,Blah,Cityyyy,IL,12345,USA
+test,,city,,IL,60605,USA
+bonzi,,12345678,12345678,12345678,12345678,12345678
