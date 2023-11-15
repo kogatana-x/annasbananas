@@ -17,52 +17,78 @@
         h1 {
             text-align: center;
         }
-        .cart-items {
-            list-style-type: none;
-            padding: 0;
-            max-width: 500px;
-            align-items: center;
-            justify-content: center;
-            display: block;
-            margin: 0 auto;
-            background-color: #ffff;
-            border-top: 1px solid #8b4513;
-            border-bottom: 1px solid #8b4513;
-        }
-        .cart-item {
+        .cart-container {
             border: 1px solid #8b4513;
-            max-width: 400px;
-            align-items: center;
-            justify-content: center;
-            display: block;
+            max-width: 1000px;
             margin: 20px auto;
-
             padding: 10px;
-            background-color: #fff8dc; /* Cornsilk color for a slightly different yellow */
-            text-align: center;
+            background-color: #fff8dc;
         }
-    .banana-button {
-        background: #FFD700;
-        color: white;
-       /* border-radius: 50px;*/
-        padding: 10px 30px;
-        font-size: 15px;
-        border: none;
-        cursor: pointer;
-        margin: 10px 20px;
-        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        transition: all 0.3s ease-out;
-    }
-    .banana {
-        display: flex;
-        flex-direction: row;
-        margin: 20px auto;
-        justify-content: center;
-        align-items: center;
-    }
-    .banana-button:hover {
-        transform: scale(1.05);
-    }
+
+        .cart-item {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            border-bottom: 1px solid #8b4513;
+            padding: 20px 20px;
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .cart-item img {
+            width: 30%;
+            max-width: 150px;
+            margin-right: 20px;
+        }
+
+        .cart-item-details {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            flex-grow: 1;
+            margin-bottom: 0;
+
+        }
+        .cart-item-details h2{
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-top: 0;
+        }
+
+        .cart-item-price {
+            font-weight: bold;
+        }
+        .total h2{
+            text-align: right;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .banana-button {
+            background: #FFD700;
+            color: white;
+            padding: 10px 30px;
+            font-size: 15px;
+            border: none;
+            cursor: pointer;
+            margin: 10px 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease 0s;
+        }
+        .banana {
+            display: flex;
+            flex-direction: row;
+            margin: 20px auto;
+            justify-content: center;
+            align-items: center;
+        }
+        .banana-button:hover{
+            transform: scale(1.05);
+            transition: all 0.3s ease 0s;
+        }
     </style>
 </head>
 <body>
@@ -70,8 +96,9 @@
         <a href="index.html" style="float: left; display: block; color: black; text-align: center; padding: 14px 16px; text-decoration: none; font-size: 17px;">Home</a>
         <a href="products.html" style="float: left; display: block; color: black; text-align: center; padding: 14px 16px; text-decoration: none; font-size: 17px;">Products</a>
         <a href="about.html" style="float: left; display: block; color: black; text-align: center; padding: 14px 16px; text-decoration: none; font-size: 17px;">About</a>
-        <a href="cart.html" class="cart" style="float: right; display: block; color: black; text-align: center; padding: 14px 16px; text-decoration: none; font-size: 17px;">Cart</a>
         <a href="login.html" class="login" style="float: right; display: block; color: black; text-align: center; padding: 14px 16px; text-decoration: none; font-size: 17px;">Login</a>
+        <a href="cart.html" class="cart" style="float: right; display: block; color: black; text-align: center; padding: 14px 16px; text-decoration: none; font-size: 17px;"></a>
+
     </div>
         <h1>Your Shopping Cart</h1>
         <form id="checkout-form" action="/checkout" method="post" style="display: none;">

@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Payment Processing</title>
-    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-    <link rel="manifest" href="site.webmanifest">
-
+    <title>External Payment Processing</title>
+        <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+        <link rel="manifest" href="site.webmanifest">
     <style>
         body {
             display: flex;
@@ -57,20 +56,20 @@
     </style>
 </head>
 <body>
-    <h1>Anna's Bananas Purchase Order</h1>
-    <img src="annasbananaslogo3.png" alt="Logo" style="width:15%">
+    <img src="external-payment-vendor-logo.png" alt="Logo" style="width:15%">
      <p>Please enter your payment information below so we can process your order.
      <br>Enter at your own risk as our engineers arent paid enough (or at all) to implement encryption</p>
-    <p id="totalCost"></p>
     <form action="/payments" method="POST">
-        <label for="name">Name:</label><br>
-        <input type="text" id="name" name="name" required><br>
+        <label for="FNLN">Name On Card:</label><br>
+        <input type="text" id="FNLN" name="FNLN" pattern=".*\s+.*" title="Please enter the first and last name on the card." required><br>
         <label for="cardNumber">Card Number:</label><br>
-        <input type="text" id="cardNumber" name="cardNumber" required><br>
-        <label for="expiryDate">Expiry Date:</label><br>
-        <input type="text" id="expiryDate" name="expiryDate" required><br>
-        <label for="cvv">CVV:</label><br>
-        <input type="text" id="cvv" name="cvv" required><br>
+        <input type="text" id="cardNumber" name="cardNumber" pattern="\d{8,12}" title="Card number must be between 8 and 12 digits long" required><br>
+        <label for="cardExpiry">Expiry Date:</label><br>
+        <input type="text" id="cardExpiry" name="cardExpiry" pattern="(0[1-9]|1[0-2])\/[0-9]{4}" title="Expiry date must be in the form of mm/yyyy" required><br>
+        <label for="cardCVC">CVV:</label><br>
+        <input type="text" id="cardCVC" name="cardCVC" pattern="\d{3}" title="Card CVC must be exactly 3 digits long" required><br>
+        <label for="cardZip">Zip Code:</label><br>
+        <input type="text" id="cardZip" name="cardZip" pattern="\d{5}" title="Card Zip must be exactly 5 digits long" required><br>
         <input type="submit" value="Submit Payment">
     </form>
 </body>

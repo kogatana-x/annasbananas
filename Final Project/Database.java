@@ -42,7 +42,6 @@ public class Database {
         return row;
     }
 
-
     /* Name: drop
      * Description: Drops the database
      * Parameters: none

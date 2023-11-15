@@ -3,14 +3,16 @@ public class PaymentRepository {
     private String filename="payments.txt";
     Database PaymentDatabase = new Database(filename);
 
-    public boolean savePayments(Payment payment){
-        int index = PaymentDatabase.isInDB(payment.getUsername());
-        if(index==-1){
-            String row=payment.getUsername()+","+payment.getCardNumber()+","+payment.getCardName()+","+payment.getCardExpiry()+","+payment.getCardCVC()+","+payment.getCardZip();
+    public void savePayments(Payment payment){
+        //int index = PaymentDatabase.isInDB(payment.getUsername());
+        //System.out.println("Payment Save index: "+index);
+        //if(index==-1){
+            String row=payment.getUsername()+","+payment.getCardName()+","+payment.getCardNumber()+","+payment.getCardExpiry()+","+payment.getCardCVC()+","+payment.getCardZip();
+            System.out.println("Payment Save row: "+row);
             PaymentDatabase.add(row);
-            return true;
-        }
-        return false;
+        //    return true;
+        //}
+        //return false;
 
     }
 

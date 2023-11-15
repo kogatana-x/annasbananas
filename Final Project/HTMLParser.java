@@ -14,6 +14,7 @@ import java.util.ArrayList;
 public class HTMLParser{
     private Socket socket;
     private String method="";
+    private String directory="";
     private String path="";
     private String cookie="";
     private String cookieString="";
@@ -23,8 +24,9 @@ public class HTMLParser{
     public boolean setCookie=false;
     public ArrayList<String> values;
     
-    public HTMLParser(Socket socket){
+    public HTMLParser(String directory,Socket socket){
        this.socket=socket;
+        this.directory=directory;
         try{
             reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             line = reader.readLine();
@@ -124,6 +126,7 @@ public class HTMLParser{
        // print(parts);
         this.values=parts;    
     }
+    
     public void print(ArrayList<String> parts){
         for(int x=0;x<parts.size();x++){
            if(parts.get(x)==null){return;}
@@ -160,21 +163,27 @@ public class HTMLParser{
                 if(!cookie.equals("")){
                     String navbar="<a href=\"login.html\" class=\"login\" style=\"float: right; display: block; color: black; text-align: center; padding: 14px 16px; text-decoration: none; font-size: 17px;\">Login</a>";
                     String newnavbar="<a href=\"logout\" class=\"login\" style=\"float: right; display: block; color: black; text-align: center; padding: 14px 16px; text-decoration: none; font-size: 17px;\">Logout</a>";
+                    String cart = "<a href=\"cart.html\" class=\"cart\" style=\"float: right; display: block; color: black; text-align: center; padding: 14px 16px; text-decoration: none; font-size: 17px;\"></a>";
+                    String newcart = "<a href=\"cart.html\" class=\"cart\" style=\"float: right; display: block; color: black; text-align: center; padding: 14px 16px; text-decoration: none; font-size: 17px;\">Cart</a>";
+
                     String file=new String(body);
                     file=file.replace(navbar,newnavbar);
+                    file=file.replace(cart,newcart);
                     output.write(file.getBytes());
                 }
                 else{output.write(body);} // Write the text data directly to the output
                 // Write the text data directly to the output
             }
-        }catch(IOException e){
+        } 
+        catch (NullPointerException x){}
+        catch(IOException e){
             System.out.println("Error sending response: " + e.getMessage());
         }
     }
     
     public byte[] readImage(String filename){
         try{
-            byte[] file= Files.readAllBytes(Paths.get("html/" + filename));
+            byte[] file= Files.readAllBytes(Paths.get(directory + filename));
             return file;
              
         }
@@ -203,6 +212,9 @@ public class HTMLParser{
             StringBuilder html = new StringBuilder();
             html.append("HTTP/1.1 302 Found\r\n");
             html.append("Location: " + location + "\r\n");
+            if(!this.cookie.equals("")){
+                html.append(this.cookieString+"\r\n");
+            }
             html.append("\r\n"); // blank line between headers and content
             byte[] headerBytes = html.toString().getBytes();
             output.write(headerBytes);

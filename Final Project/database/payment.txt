@@ -1,1 +1,0 @@
-id, usernameid, ccn, cvv, expiry, addressid

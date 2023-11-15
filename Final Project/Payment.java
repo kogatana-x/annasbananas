@@ -6,13 +6,13 @@ public class Payment {
     private String cardCVC;
     private String cardZip;
 
-    public Payment(String username, String cardNumber, String cardName, String cardExpiry, String cardCVC, String cardZip) {
-        this.username = username;
-        this.cardNumber = cardNumber;
-        this.cardName = cardName;
-        this.cardExpiry = cardExpiry;
-        this.cardCVC = cardCVC;
-        this.cardZip = cardZip;
+    public Payment(String username,  String cardName, String cardNumber,String cardExpiry, String cardCVC, String cardZip) {
+        this.username = username.trim();
+        this.cardName = cardName.trim();
+        this.cardNumber = cardNumber.trim();
+        this.cardExpiry = cardExpiry.trim();
+        this.cardCVC = cardCVC.trim();
+        this.cardZip = cardZip.trim();
     }
 
     // getters and setters

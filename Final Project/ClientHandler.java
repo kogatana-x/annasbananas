@@ -1,9 +1,8 @@
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.Socket;
 
 
-public class ClientHandler implements Runnable {
+public class ClientHandler extends Thread {
     private Socket socket;
 
     public ClientHandler(Socket socket) {
@@ -14,22 +13,11 @@ public class ClientHandler implements Runnable {
         int port = socket.getPort();
         return ip + ":" + port;
     }
-    private String getRequestInfo(BufferedReader reader) throws IOException{
-        String line = reader.readLine();
-        if (line == null) {
-            return null;
-        }
-        String[] parts = line.split(" ");
-        if (parts.length < 2) {
-            return null;
-        }
-        return parts[1];
-    }
    
     @Override
     public void run(){
         try{
-            HTMLParser parser = new HTMLParser(socket);
+            HTMLParser parser = new HTMLParser("html/",socket);
             parser.parseRawStrings();
             String method=parser.getMethod();
             String path=parser.getPath();
@@ -109,8 +97,8 @@ public class ClientHandler implements Runnable {
                 result=authenticator.login(username, password);
                 if(result){
                     res="success";
-                    filename="/index.html";
-                    path="/index.html";
+                    filename="/cart.html";
+                    path="/cart.html";
                     parser.setCookie(username,31536000);
                 }
                 else{
@@ -125,37 +113,15 @@ public class ClientHandler implements Runnable {
             } 
             
             //CAN ONLY DO THESE W/ A LOGGED IN USER
-            else if(method.equals("POST")&&path.equals("/payments")){ //TODO
-                    String cardNumber = "";
-                    String cardName = "";
-                    String cardExpiry = "";
-                    String cardCVC = "";
-                    String cardZip = "";
-                    for (int x=0;x<parser.values.size();x++) {
-                        if (parser.values.get(x)==null){break;}
-                        else if (parser.values.get(x).equals("cardNumber")) {
-                            x++;
-                            cardNumber = parser.values.get(x);
-                        } else if (parser.values.get(x).equals("cardName")) {
-                            x++;
-                            cardName = parser.values.get(x);
-                        } else if (parser.values.get(x).equals("cardExpiry")) {
-                            x++;
-                            cardExpiry =parser.values.get(x);
-                        } else if (parser.values.get(x).equals("cardCVC")) {
-                            x++;
-                            cardCVC = parser.values.get(x);
-                        } else if (parser.values.get(x).equals("cardZip")) {
-                            x++;
-                            cardZip = parser.values.get(x);
-                        }
-                }
-                        System.out.println("Payment attempt from " + getSourceInfo(socket) + " with card number " + cardNumber);
-                        PaymentAuthenticator authenticator = new PaymentAuthenticator(new PaymentRepository());
-                        authenticator.pay(username, cardNumber, cardName, cardExpiry, cardCVC, cardZip);
-                            
-                        filename="finished-registration.html";
-                } 
+            else if(method.equals("GET")&&path.equals("/payments.html")){ //TODO
+                //filename="/payments.html";
+                //mimeType = "text/html";
+                path="http://"+socket.getLocalAddress().toString()+":8081/payments.html";
+                System.out.println("PATH REDIRECT TO: "+path);
+                parser.redirect(path);
+                System.out.println("Payment attempt success from " + getSourceInfo(socket));
+                return;
+            } 
                 
             else if(method.equals("POST")&&path.equals("/addToCart")){
                 CartBuilder cart = new CartBuilder(cookie);
@@ -189,6 +155,7 @@ public class ClientHandler implements Runnable {
                 System.out.println("Add to cart attempt "+rez+" from " + username +" "+ getSourceInfo(socket) + " with productId " + productId+" and quantity "+quantity);
                 
             }      
+            
             else if(method.equals("POST")&&path.equals("/checkout")){ //TODO
                 CartBuilder cart = new CartBuilder(cookie);
 
@@ -196,9 +163,11 @@ public class ClientHandler implements Runnable {
                 result=cart.checkout();
                 if(result){
                     res="success";
-                    filename="/payment.html";
-                    path="/payment.html";
                     parser.setCookie(username,31536000);
+                    path="http://"+socket.getLocalAddress().toString()+":8081/payments.html";
+                    System.out.println("PATH REDIRECT TO: "+path);
+                    parser.redirect(path);
+                    return;
                 }
                 else{
                     res="failure";
@@ -215,6 +184,11 @@ public class ClientHandler implements Runnable {
             else if(method.equals("GET")&&path.equals("/logout")){
                 System.out.println("Logout from " + getSourceInfo(socket) + " with username " + username);
                 parser.setCookie(username,0);
+                filename="/login.html";
+                mimeType = "text/html";
+                path="/login.html";
+                parser.redirect(path);
+                return;
             } 
         
             //HTML-BASED FILE PATHS >> 
@@ -245,7 +219,6 @@ public class ClientHandler implements Runnable {
                 String finalHTML = cartHtml.replace("<div id=\"cart-list\"></div>", html.toString());
                 body=finalHTML.getBytes();
             }
-
 
             if(filename.equals("garbage")){
                 int isQuery = path.indexOf("?");
@@ -283,6 +256,7 @@ public class ClientHandler implements Runnable {
                 }
                 body = parser.readImage(filename);
             }
+            
             parser.sendResponse("200 OK", mimeType, body);
     }
         finally{
