@@ -33,7 +33,8 @@ public class ProductRepository {
     }
 
     public Product getProduct(String id){
-        String[] parts = ProductDatabase.returnResult(id);
+        String partString = ProductDatabase.returnResultRow("0",id);
+        String[] parts=partString.split(",");
         if(parts==null){return null; }
         if(parts.length>1){
             return ProductFactory.createProduct(parts);

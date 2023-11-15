@@ -33,7 +33,8 @@ class UserRepository {
      * Returns: the user, or null if no user with that username exists
      */
     public User getUser(String username) {
-        String[] parts = UserDatabase.returnResult(username);
+        String partString = UserDatabase.returnResultRow("0",username);
+        String[] parts=partString.split(",");
         if(parts==null){return null; }
         if(parts.length>1){
             return new User(parts[0], parts[1], parts[2], parts[3], parts[4], parts[5]);

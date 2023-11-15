@@ -1,3 +1,2 @@
-id,username,status,Q1,Q2,Q3,Q4,Q5,Q6,Q7,Q8
-
-2,test,false,0,1,0,0,0,0,0,0,0
+cartID,username,status,Q0,Q1,Q2,Q3,Q4,Q5,Q6,Q7
+1,felipe,false,1,1,0,0,0,0,0,1,0

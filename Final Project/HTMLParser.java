@@ -21,7 +21,6 @@ public class HTMLParser{
     private BufferedReader reader;
     private String line;
     public boolean setCookie=false;
-    //private Database CookieDB = new Database("sessions.txt");
     public ArrayList<String> values;
     
     public HTMLParser(Socket socket){

@@ -74,11 +74,24 @@
         <a href="login.html" class="login" style="float: right; display: block; color: black; text-align: center; padding: 14px 16px; text-decoration: none; font-size: 17px;">Login</a>
     </div>
         <h1>Your Shopping Cart</h1>
+        <form id="checkout-form" action="/checkout" method="post" style="display: none;">
+        </form>
         <div class="banana">
-            <button class="banana-button" onclick="location.href='payments.html'" type="button">Checkout</button>
+            <button class="banana-button" id="checkout-button" type="button">Checkout</button>
             <button class="banana-button" onclick="location.href='products.html'" type="button">Continue Shopping</button>
         </div>
         <div id="cart-list"></div>
         
 </body>
+<script>
+    if (new URL(window.location.href).searchParams.get('showAlert') === 'true') {
+        alert('Please add an item to the cart before checking out.');
+        url.searchParams.delete('showAlert');
+         // Redirect to the new URL
+        window.location.href = url.toString();
+    }
+    document.getElementById('checkout-button').addEventListener('click', function() {
+        document.getElementById('checkout-form').submit();
+    });
+</script>
 </html>

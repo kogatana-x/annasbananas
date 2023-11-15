@@ -2,12 +2,13 @@ public class CartBuilder {
     private Cart cart;
 
     public CartBuilder(String username) {
+        if(username.equals("")){return;}
         cart = Cart.getInstance();
         cart.setup(username);
-    }
+   }
 
     public CartBuilder addItem(String productId, String quantity) {
-        cart.update(productId, quantity);
+        cart.updateItem(productId, quantity);
         return this;
     }
 
@@ -20,9 +21,9 @@ public class CartBuilder {
         cart.clearCart();
         return this;
     }
-    public CartBuilder checkout(){
-        cart.checkout();
-        return this;
+    public boolean checkout(){
+        boolean result=cart.checkout();
+        return result;
     }
 
     public Cart build() {

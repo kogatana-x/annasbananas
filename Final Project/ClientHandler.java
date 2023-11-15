@@ -33,17 +33,16 @@ public class ClientHandler implements Runnable {
             parser.parseRawStrings();
             String method=parser.getMethod();
             String path=parser.getPath();
-            System.out.println(method+" Request from " + getSourceInfo(socket) + " for " + path);
+            System.out.println("(ClientHandler): "+method+" "+path+" from " + getSourceInfo(socket));
             parser.getValues();
             String cookie=parser.getCookie();
-            String username="";
-
-            User user;
+            String username=cookie;
+            //if(!cookie.equals("")){cart = new CartBuilder(cookie);}
+            /*User user;
             if(!cookie.equals("")){
                 UserRepository userRepo = new UserRepository();
                 user=userRepo.getUser(cookie);
-                if(user!=null){username=user.getUsername();}
-            }
+            }*/
 
 
             String filename="garbage";
@@ -61,7 +60,6 @@ public class ClientHandler implements Runnable {
                 if (parser.values==null){return;}
 
                 for (int x=0;x<parser.values.size();x++) {
-                    //System.out.println(parser.values.get(x));
 
                     if (parser.values.get(x).contains("username")) {
                         x++;
@@ -160,6 +158,8 @@ public class ClientHandler implements Runnable {
                 } 
                 
             else if(method.equals("POST")&&path.equals("/addToCart")){
+                CartBuilder cart = new CartBuilder(cookie);
+
                 String productId = "";
                 String quantity="";
                 String rez="failed";
@@ -185,28 +185,35 @@ public class ClientHandler implements Runnable {
                     rez="success";
                 }
                 filename="/products.html";
-               
-                System.out.println("Add to cart attempt "+rez+" from " + username + getSourceInfo(socket) + " with productId " + productId);
-                
+                cart=cart.addItem(productId, quantity);               
+                System.out.println("Add to cart attempt "+rez+" from " + username +" "+ getSourceInfo(socket) + " with productId " + productId+" and quantity "+quantity);
                 
             }      
             else if(method.equals("POST")&&path.equals("/checkout")){ //TODO
-                    String productId = "";
-                    for (int x=0;x<parser.values.size();x++) {
-                        if (parser.values.get(x)==null){break;}
-                        else if (parser.values.get(x).equals("productId")) {
-                            x++;
-                            productId = parser.values.get(x);
-                        }
+                CartBuilder cart = new CartBuilder(cookie);
+
+                String res;
+                result=cart.checkout();
+                if(result){
+                    res="success";
+                    filename="/payment.html";
+                    path="/payment.html";
+                    parser.setCookie(username,31536000);
                 }
-                System.out.println("Checkout attempt from " + getSourceInfo(socket) + " with productId " + productId);
+                else{
+                    res="failure";
+                    filename="/cart.html";
+                    path="/cart.html?showAlert=true";
+                    parser.redirect(path);
+                }
+                System.out.println("Checkout attempt "+res+" from " + getSourceInfo(socket));
                 //String username="";
                 //authenticator.checkout(username, productId);
                 //filename="finished-registration.html";
                 } 
                 
-            else if(method.equals("POST")&&path.equals("/logout")){
-                System.out.println("Logout attempt from " + getSourceInfo(socket) + " with username " + username);
+            else if(method.equals("GET")&&path.equals("/logout")){
+                System.out.println("Logout from " + getSourceInfo(socket) + " with username " + username);
                 parser.setCookie(username,0);
             } 
         
@@ -217,7 +224,7 @@ public class ClientHandler implements Runnable {
 
                 HTMLDisplay display = new HTMLDisplay();
 
-                StringBuilder html = display.getString(products);
+                StringBuilder html = display.displayProductCatalog(products);
                 filename="products.html";
                 mimeType = "text/html";
                 String productsHtml = parser.replace("products.html","<div id=\"product-list\"></div>", html.toString());
@@ -226,10 +233,11 @@ public class ClientHandler implements Runnable {
             }
 
             else if(path.startsWith("/cart.html")){
-                CartBuilder cart = new CartBuilder(username);
+                CartBuilder cart = new CartBuilder(cookie);
+
                 Product[] cartProducts = cart.displayCart();
                 HTMLDisplay display = new HTMLDisplay();
-                StringBuilder html = display.getString(cartProducts);
+                StringBuilder html = display.displayCart(cartProducts);
                 String cartHtml="";
                 filename="cart.html";
                 mimeType = "text/html";
@@ -270,14 +278,12 @@ public class ClientHandler implements Runnable {
                     filename="site.webmanifest";
                     mimeType = "application/manifest+json";
                 }else {
-                    //System.out.println("sending you to index");
                     filename="index.html";
                     mimeType = "text/html";
                 }
                 body = parser.readImage(filename);
             }
             parser.sendResponse("200 OK", mimeType, body);
-            //System.out.println("File " + filename + " requested from " + getSourceInfo(socket));
     }
         finally{
             try{

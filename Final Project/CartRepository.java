@@ -20,9 +20,21 @@ public class CartRepository {
      *            PQ - the product-quantity pairs for the cart
      * Returns: the index of the cart that was added
      */
-    public String add(String username, String mProd){
+    public String setup(String username){
+        if(username.equals("")){return "";}
+        //System.out.println("(Cart Repository)SETTING UP CART FOR: "+username);
+
+        //If there is an existing cart and if status is false - return cart ID
+        String returnResult=CartDatabase.returnResultRow("1",username);
+        //String status=CartDatabase.returnFieldValue(returnResult, 2);
+        String[] cart=returnResult.split(",");
+        //System.out.println("(Cart Repository) Cart ID: "+cart[0]);
+        if(!cart[0].equals("error")){return cart[0];}
+        //if(status.equals("false")){
+        //    return cart[0];
+        //}
+        
         String in=nextID();
-        int mprod=Integer.parseInt(mProd);
 
         String row = "";
         row=row+in;
@@ -30,10 +42,9 @@ public class CartRepository {
         row=row+username.trim();
         row=row+",false";
 
-        for(int x=0; x<=mprod;x++){
+        for(int x=0; x<=numberOfProducts;x++){
             row=row+",0";
         }
-        //System.out.println(row);
         CartDatabase.add(row);
         return in;
     }
@@ -45,8 +56,10 @@ public class CartRepository {
      *             quantity - the new quantity of the product 
      * Returns: true if the update was successful, false otherwise
      */
-    public void update(String cartIndex, String product, String quantity){
-        CartDatabase.update(cartIndex,product,quantity);
+    public void updateItem(String cartIndex, String productId, String quantity){
+        int fieldId=Integer.parseInt(productId)+3;
+        //System.out.println("(Cart Repository)Updating Cart: "+cartIndex+" || FieldId: "+fieldId+" || Product: "+productId+" || Quantity: "+quantity);
+        CartDatabase.update(cartIndex,Integer.toString(fieldId),quantity);
     }
 
     /* Name: delete
@@ -65,13 +78,30 @@ public class CartRepository {
      * Description: Checks out the cart. Sets the status to true
      * Parameters: cartIndex - the index of the cart to update
      */
-    public void checkout(String cartIndex){
+    public boolean checkout(String cartIndex){
+        boolean result=isAtLeastOneProduct(cartIndex);
+        if(!result){
+            return false;
+        }
         CartDatabase.update(cartIndex,"2","true");
+        return true;
     }
-
+    private boolean isAtLeastOneProduct(String cartIndex){
+        boolean result=false;
+        String cartString=CartDatabase.returnResultRow("0",cartIndex);
+        String[] cart=cartString.split(",");
+        for(int x=3;x<cart.length;x++){
+            if(!cart[x].equals("0")){
+                result=true;
+            }
+        }
+        return result;
+    
+    }
     //only returns carts that are not checked out
-    public String[] getCart(String username){
-        String[] cart=CartDatabase.returnResult(username);
-        return cart;
+    public String getCart(String cartId){
+        String cartString=CartDatabase.returnResultRow("0",cartId);
+        //if(cart.length>1){System.out.println("RESULT==="+cart[1]);}
+        return cartString;
     }
 }
