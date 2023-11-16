@@ -1,0 +1,73 @@
+<!--
+    Name: Anna Andler
+    Class: SE 450
+    Date: 11/15/2023
+    Project: Final Project - eCommerce Site (Anna's Bananas)
+    File Name: index.html
+    Description:  This is the HTML page for the home page. Displays a welcome message and some featured products.
+-->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Anna's Bananas</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="manifest" href="site.webmanifest">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            /*background-color: #f8f8f8;*/
+            font-family: Arial, sans-serif;
+            background-color: #fffacd; /* LemonChiffon color for a light yellow background */
+            padding: 20px;
+        }
+
+        h1,p {
+            text-align: center;
+        }
+        .product-container {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+    }
+
+        .product-container a {
+            width: 300px;
+            margin: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .product-container a {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="navbar" style="background-color: #FFD700; overflow: hidden; padding: 20px;">
+        <a href="index.html" style="float: left; display: block; color: black; text-align: center; padding: 14px 16px; text-decoration: none; font-size: 17px;">Home</a>
+        <a href="products.html" style="float: left; display:block;color:black;text-align: center; padding: 14px 16px; text-decoration: none; font-size: 17px;">Product Search</a>
+        <a href="about.html" style="float: left; display: block; color: black; text-align: center; padding: 14px 16px; text-decoration: none; font-size: 17px;">About</a>
+        <a href="login.html" class="login" style="float: right; display: block; color: black; text-align: center; padding: 14px 16px; text-decoration: none; font-size: 17px;">Login</a>
+        <a href="cart.html" class="cart" style="float: right; display: block; color: black; text-align: center; padding: 14px 16px; text-decoration: none; font-size: 17px;"></a>
+
+    </div>
+    <h1>Welcome to Anna's Bananas</h1>
+    <img src="annasbananaslogo3.png" alt="Banana" style="display: block; margin-left: auto; margin-right: auto; width: 15%;">
+
+    <p>Your one-stop shop for bananas!</p>
+    <h2>Featured Products</h2>
+    <div class="product-container">
+        <a href="products.html#banana1"> <img src="yellow-spinning-banana.gif" alt="Banana 1" style="width: 100%;"></a>
+        <a href="products.html#banana2"> <img src="yellow-spinning-banana.gif" alt="Banana 2" style="width: 100%;"></a>
+        <a href="products.html#banana3"> <img src="yellow-spinning-banana.gif" alt="Banana 3" style="width: 100%;"></a>
+    </div>
+</body>
+</html>

@@ -5,6 +5,38 @@
 ## Project Description
 *"A simplified yet comprehensive shopping system. This system will allow customers to browse products, add items to their shopping cart, place orders, and even simulate the payment process."*
 
+
+## Running the Server
+### Download the Server Backend 
+Option 1: Use the Executable: 
+[ExecutableDownload]("Final Project/BananaServer.exe")
+
+Option 2: Use the .jar file:
+[JarDownload]("Final Project/BananaServer.jar")
+
+Option 3: Compile from source:
+Download: [JarDownload]("Final Project/Source Files")
+Compile:
+`javac BananaServer.java`
+Execute:
+`java BananaServer`
+
+### IMPORTANT
+Ensure that the backend program is located in the same directory as the html/, payment-html/ and database/ folders.
+
+## Accessing the Site
+From a browser such as Firefox or Microsoft Edge, navigate to:
+> http://localhost:8080
+
+Note: I only tested the site from Firefox and Edge, so there may be issues with other browser clients. 
+
+## Instructions for Use
+The site can be used without any prior knowledge of how it works. Input and button clicks are sanitized and the users are notified if they did something wrong.
+
+Note: the cart functionality is not available until the user has logged in.
+
+
+
 ## Design Requirements
 ### SOLID Principles**
  - Single Responsibility Principle (SRP):
@@ -36,22 +68,7 @@ Note: There is no need to start the payment server, as the ecommerce site auto s
 
 ## UML Diagram
 The UML Diagrams and Database Architecture for this project are accessible in the below Excel sheet:
-[UMLXSLX](https://github.com/kogatana-x/SE450/blob/Final/Andler_SE450_Final_UML.xlsx)
-
-
-## Running the Server
-`java BananaServer.java`
-
-## Accessing the Site
-From a browser such as Firefox or Microsoft Edge, navigate to:
-> http://localhost:8080
-
-Note: I only tested the site from Firefox and Edge, so there may be issues with other browser clients. 
-
-## Instructions for Use
-The site can be used without any prior knowledge of how it works. Input and button clicks are sanitized and the users are notified if they did something wrong.
-
-Note: the cart functionality is not available until the user has logged in.
+[UML XLSX Download](https://github.com/kogatana-x/SE450/blob/Final/Andler_SE450_Final_UML.xlsx)
 
 
 

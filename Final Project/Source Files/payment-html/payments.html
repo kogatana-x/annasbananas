@@ -1,0 +1,86 @@
+<!--
+    Name: Anna Andler
+    Class: SE 450
+    Date: 11/15/2023
+    Project: Final Project - eCommerce Site (Anna's Bananas)
+    File Name: payments.html
+    Description: This is the HTML page for the external payment vendor. It is a simple form that takes in the user's payment information and sends it to the server.
+    Form: /payments
+-->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>External Payment Processing</title>
+        <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+        <link rel="manifest" href="site.webmanifest">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #fffacd; /* LemonChiffon color for a light yellow background */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+
+            font-family: Arial, sans-serif;
+        }
+        form {
+            width: 100%;
+            max-width: 400px;
+            padding: 15px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        input[type="text"], input[type="name"], input[type="cardNumber"], input[type="expiryDate"], input[type="cvv"], input[type="submit"] {
+            width: 90%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        input[type="submit"] {
+            background-color: #FFD700;
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: block;
+            margin: 0 auto;
+        }
+        @media (max-width: 600px) {
+            form {
+                width: 100%;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <img src="external-payment-vendor-logo.png" alt="Logo" style="width:15%">
+     <p>Please enter your payment information below so we can process your order.
+     <br>Enter at your own risk as our engineers arent paid enough (or at all) to implement encryption</p>
+    <form action="/payments" method="POST">
+        <label for="cardName">Name On Card:</label><br>
+        <input type="text" id="cardName" name="cardName" pattern=".*\s+.*" title="Please enter the first and last name on the card." required><br>
+        <label for="cardNumber">Card Number:</label><br>
+        <input type="text" id="cardNumber" name="cardNumber" pattern="\d{8,12}" title="Card number must be between 8 and 12 digits long" required><br>
+        <label for="cardExpiry">Expiry Date:</label><br>
+        <input type="text" id="cardExpiry" name="cardExpiry" pattern="(0[1-9]|1[0-2])\/[0-9]{4}" title="Expiry date must be in the form of mm/yyyy" required><br>
+        <label for="cardCVC">CVV:</label><br>
+        <input type="text" id="cardCVC" name="cardCVC" pattern="\d{3}" title="Card CVC must be exactly 3 digits long" required><br>
+        <label for="cardZip">Zip Code:</label><br>
+        <input type="text" id="cardZip" name="cardZip" pattern="\d{5}" title="Card Zip must be exactly 5 digits long" required><br>
+        <input type="submit" value="Submit Payment">
+    </form>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!--
+    Name: Anna Andler
+    Class: SE 450
+    Date: 11/15/2023
+    Project: Final Project - eCommerce Site (Anna's Bananas)
+    File Name: login.html
+    Description:  This is the HTML page for the login page. Displays a login form to be submitted to the server
+    Form: /login
+-->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="manifest" href="site.webmanifest">
+
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #fffacd; /* LemonChiffon color for a light yellow background */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+
+            font-family: Arial, sans-serif;
+        }
+        form {
+            width: 100%;
+            max-width: 400px;
+            padding: 15px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        input[type="text"], input[type="password"], input[type="submit"] {
+            width: 90%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        input[type="submit"] {
+            background-color: #FFD700;
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: block;
+            margin: 0 auto;
+        }
+        @media (max-width: 600px) {
+            form {
+                width: 100%;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <form action="/login" method="POST">
+        <h2>Anna's Bananas </h2>
+        <img src="annasbananaslogo3.png" alt="Banana" style="display: block; margin-left: auto; margin-right: auto; width: 45%;">
+
+        <h3>User Login</h3>
+        <p>Don't have an account? <a href="register.html">Register here</a>.</p>
+        <br>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+        <input type="submit" value="Login">
+    </form>
+
+</body>
+<script>
+    window.onload = function() {
+        var showAlert = new URL(window.location.href).searchParams.get('showAlert');
+        console.log('showAlert:', showAlert);
+        if (showAlert === 'true') {
+            alert('Login Failed. Username or password is incorrect');
+            url.searchParams.delete('showAlert');
+            // Redirect to the new URL
+            window.location.href = url.toString();
+        }
+    }
+</script>
+</html>

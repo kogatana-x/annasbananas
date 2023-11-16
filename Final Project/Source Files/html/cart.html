@@ -1,0 +1,134 @@
+<!--
+    Name: Anna Andler
+    Class: SE 450
+    Date: 11/15/2023
+    Project: Final Project - eCommerce Site (Anna's Bananas)
+    File Name: cart.html
+    Description:  This is the HTML page for the cart page. It is a simple page that displays the items in the user's cart.
+    Form: /checkout
+-->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Shopping Cart</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="manifest" href="site.webmanifest">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fffacd; /* LemonChiffon color for a light yellow background */
+            padding: 20px;
+            
+        }
+        h1 {
+            text-align: center;
+        }
+        .cart-container {
+            border: 1px solid #8b4513;
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 10px;
+            background-color: #fff8dc;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            border-bottom: 1px solid #8b4513;
+            padding: 20px 20px;
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .cart-item img {
+            width: 30%;
+            max-width: 150px;
+            margin-right: 20px;
+        }
+
+        .cart-item-details {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            flex-grow: 1;
+            margin-bottom: 0;
+
+        }
+        .cart-item-details h2{
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-top: 0;
+        }
+
+        .cart-item-price {
+            font-weight: bold;
+        }
+        .total h2{
+            text-align: right;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .banana-button {
+            background: #FFD700;
+            color: white;
+            padding: 10px 30px;
+            font-size: 15px;
+            border: none;
+            cursor: pointer;
+            margin: 10px 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease 0s;
+        }
+        .banana {
+            display: flex;
+            flex-direction: row;
+            margin: 20px auto;
+            justify-content: center;
+            align-items: center;
+        }
+        .banana-button:hover{
+            transform: scale(1.05);
+            transition: all 0.3s ease 0s;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar" style="background-color: #FFD700; overflow: hidden; padding: 20px;">
+        <a href="index.html" style="float: left; display: block; color: black; text-align: center; padding: 14px 16px; text-decoration: none; font-size: 17px;">Home</a>
+        <a href="products.html" style="float: left; display: block; color: black; text-align: center; padding: 14px 16px; text-decoration: none; font-size: 17px;">Products</a>
+        <a href="about.html" style="float: left; display: block; color: black; text-align: center; padding: 14px 16px; text-decoration: none; font-size: 17px;">About</a>
+        <a href="login.html" class="login" style="float: right; display: block; color: black; text-align: center; padding: 14px 16px; text-decoration: none; font-size: 17px;">Login</a>
+        <a href="cart.html" class="cart" style="float: right; display: block; color: black; text-align: center; padding: 14px 16px; text-decoration: none; font-size: 17px;"></a>
+
+    </div>
+        <h1>Your Shopping Cart</h1>
+        <form id="checkout-form" action="/checkout" method="post" style="display: none;">
+        </form>
+        <div class="banana">
+            <button class="banana-button" id="checkout-button" type="button">Checkout</button>
+            <button class="banana-button" onclick="location.href='products.html'" type="button">Continue Shopping</button>
+        </div>
+        <div id="cart-list"></div>
+        
+</body>
+<script>
+    if (new URL(window.location.href).searchParams.get('showAlert') === 'true') {
+        alert('Please add an item to the cart before checking out.');
+        url.searchParams.delete('showAlert');
+         // Redirect to the new URL
+        window.location.href = url.toString();
+    }
+    document.getElementById('checkout-button').addEventListener('click', function() {
+        document.getElementById('checkout-form').submit();
+    });
+</script>
+</html>
