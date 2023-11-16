@@ -20,7 +20,7 @@ public class ClientHandler extends Thread {
     //GLOBAL VARIABLES
     private Socket socket; //the socket to use to communicate with the client/server
     private Logger logger=Logger.getInstance(); //the logger to use
-    private HTMLParser parser; //the parser to use for sending and recieving resposnes
+    private HTMLDisplay parser; //Create a new HTML display for displaying the product catalog
 
     /* Name: ClientHandler
      * Description: The constructor for the ClientHandler class
@@ -28,7 +28,7 @@ public class ClientHandler extends Thread {
      */
     public ClientHandler(Socket socket) {
         this.socket = socket;
-        parser = new HTMLParser("html/",socket); //the parser to use for sending and recieving resposnes
+        parser = new HTMLDisplay("html/",socket); //the parser to use for sending and recieving resposnes
     }
 
     /* Name: getSourceInfo
@@ -322,9 +322,8 @@ public class ClientHandler extends Thread {
                 ProductCatalog productCatalog = ProductCatalog.getInstance(); //Initialize the product catalog
                 Product[] products = productCatalog.getAllProducts(); //Get all the products from the product catalog
 
-                HTMLDisplay display = new HTMLDisplay(); //Create a new HTML display for displaying the product catalog
  
-                StringBuilder html = display.displayProductCatalog(products); //Display the product catalog
+                StringBuilder html = parser.displayProductCatalog(products); //Display the product catalog
                 filename="products.html"; //the filename to use for the response
                 mimeType = "text/html"; //the mime type to use for the response
                 String productsHtml = parser.replace("products.html","<div id=\"product-list\"></div>", html.toString()); //replace the product list in the html with the generated product list 
@@ -335,8 +334,7 @@ public class ClientHandler extends Thread {
                 CartBuilder cart = new CartBuilder(cookie); //Create a new cart builder
 
                 Product[] cartProducts = cart.displayCart(); //Get the products from the cart
-                HTMLDisplay display = new HTMLDisplay(); //Create a new HTML display for displaying the cart
-                StringBuilder html = display.displayCart(cartProducts); //get the html for the cart products to display 
+                StringBuilder html = parser.displayCart(cartProducts); //get the html for the cart products to display 
                 String cartHtml=""; 
                 filename="cart.html"; //the filename to use for the response
                 mimeType = "text/html"; //the mime type to use for the response

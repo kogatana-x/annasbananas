@@ -6,13 +6,21 @@
  * File Name: HTMLDisplay.java
  */
 //-------------------------------------------------------
+//IMPORTS 
+import java.net.Socket;
 
 /* Name: HTMLDisplay
  * Description: This class is used to generate HTML for the site.
  * Parameters: none
  * Relationships: none
  */
-public class HTMLDisplay {
+
+
+public class HTMLDisplay extends HTMLParser{
+
+    HTMLDisplay(String directory,Socket socket){ //Constructor
+        super(directory, socket); //Call the super constructor
+    }
 
     /* Name: displayProductCatalog
      * Description: This method generates HTML for the product catalog.
