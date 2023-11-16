@@ -70,11 +70,10 @@ public class CartRepository {
         CartDatabase.update(cartIndex,Integer.toString(fieldId),quantity);
     }
 
-    /* Name: delete
-     * Description: Deletes a product from the cart. Sets the quantity to 0
+    /* Name: clearCart
+     * Description: Sets the quantity to 0 for all products in the cart
      * Parameters: cartIndex - the index of the cart to update
-     *             product - the product to delete
-     * Returns: true if the delete was successful, false otherwise
+     * Returns: None
      */
     public void clearCart(String cartIndex){
         for(int x=0;x<=numberOfProducts;x++){

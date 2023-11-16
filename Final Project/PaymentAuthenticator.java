@@ -14,7 +14,7 @@
  * Relationships: has a PaymentRepository
  */
 public class PaymentAuthenticator {
-    public PaymentRepository paymentRepository; //The repository for payments
+    private PaymentRepository paymentRepository; //The repository for payments
 
     /* Name: PaymentAuthenticator
      * Description: The constructor for the PaymentAuthenticator class

@@ -16,7 +16,7 @@
  */
 class UserRepository {
     private String filename; //The name of the file to store the users in
-    Database UserDatabase; //The database to store the users in
+    private Database UserDatabase; //The database to store the users in
 
     /* Name: UserRepository
      * Description: The constructor for the UserRepository class

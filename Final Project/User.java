@@ -172,7 +172,7 @@ public class User {
      * Parameters: none
      * Returns: none
      */
-    public void newCart() {
+    private void newCart() {
         this.skey = this.username+(this.counter+1);
     }
 

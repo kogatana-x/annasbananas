@@ -19,13 +19,13 @@
  */
 public class Address {
     //GLOBAL VARIABLES
-    public String id; //the id of the address to be stored in the database. Will be the username
-    public String street1; //the first line of the street address
-    public String street2; //the second line of the street address
-    public String city; //the city of the address
-    public String state; //the state of the address
-    public String zip; //the zip code of the address
-    public String country; //the country of the address
+    private String id; //the id of the address to be stored in the database. Will be the username
+    private String street1; //the first line of the street address
+    private String street2; //the second line of the street address
+    private String city; //the city of the address
+    private String state; //the state of the address
+    private String zip; //the zip code of the address
+    private String country; //the country of the address
 
     /* Name: Address
      * Description: The constructor for the Address class

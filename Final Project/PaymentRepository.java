@@ -15,7 +15,7 @@
  */
 public class PaymentRepository {
     private String filename; //The filename of the database
-    Database PaymentDatabase; //The database for payments
+    private Database PaymentDatabase; //The database for payments
 
     /* Name: PaymentRepository
      * Description: default constructor for payment repository. Sets the filename to payments.txt

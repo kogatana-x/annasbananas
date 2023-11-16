@@ -24,6 +24,7 @@ import java.util.concurrent.Executors; //for thread pools
 public class BananaPaymentServer implements Runnable{
     //GLOBAL VARIABLES
     private static final int PORT = 8081; //the port to listen on
+    private Logger logger = Logger.getInstance(); //Initialize the logger
 
     /* Name: run
      * Description: The main method for running the server.
@@ -32,7 +33,6 @@ public class BananaPaymentServer implements Runnable{
      * Returns: none
      */
     public void run() {
-        Logger logger = Logger.getInstance(); //Initialize the logger
         ExecutorService executorService = Executors.newFixedThreadPool(10); //Initialize the thread pool
 
         //Start the server on the default port

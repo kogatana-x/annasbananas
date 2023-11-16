@@ -19,6 +19,8 @@ import java.net.Socket; //for sockets
 public class ClientHandler extends Thread {
     //GLOBAL VARIABLES
     private Socket socket; //the socket to use to communicate with the client/server
+    private Logger logger=Logger.getInstance(); //the logger to use
+    private HTMLParser parser; //the parser to use for sending and recieving resposnes
 
     /* Name: ClientHandler
      * Description: The constructor for the ClientHandler class
@@ -26,6 +28,7 @@ public class ClientHandler extends Thread {
      */
     public ClientHandler(Socket socket) {
         this.socket = socket;
+        parser = new HTMLParser("html/",socket); //the parser to use for sending and recieving resposnes
     }
 
     /* Name: getSourceInfo
@@ -48,8 +51,6 @@ public class ClientHandler extends Thread {
     @Override
     public void run(){
         //INSTANCE VARIABLES
-        Logger logger=Logger.getInstance(); //the logger to use
-        HTMLParser parser = new HTMLParser("html/",socket); //the parser to use for sending and recieving resposnes
 
         //Parse the request from the client
         try{

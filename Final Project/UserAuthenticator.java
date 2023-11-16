@@ -33,7 +33,7 @@ class UserAuthenticator {
     }
 
     /* Name: hashPassword
-     * Description: Hashes a password with a salt
+     * Description: Hashes a password with a salt. Note, made public for JUnit tests
      * Parameters: password - the password to hash
      *             salt - the salt to use
      * Returns: the hashed password

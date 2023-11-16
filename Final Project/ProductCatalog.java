@@ -18,7 +18,7 @@
 public class ProductCatalog {
     //GLOBAL VARIABLES
     private ProductRepository productRepository; //The repository to use to retrieve products
-    
+    private static ProductCatalog productCatalog; //The instance of the ProductCatalog class
     /* Name: ProductCatalog
      * Description: The default constructor for the class
      * Parameters: productRepository - the repository to use to retrieve products
@@ -32,7 +32,9 @@ public class ProductCatalog {
      * Returns: ProductCatalog - the instance of the ProductCatalog class
      */
     public static ProductCatalog getInstance() {
-        ProductCatalog productCatalog = new ProductCatalog(new ProductRepository()); //Create a new instance of the ProductCatalog class
+        if(productCatalog==null){
+            productCatalog = new ProductCatalog(new ProductRepository()); //Create a new instance of the ProductCatalog class
+        }
         return productCatalog;
     }
 

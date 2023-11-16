@@ -20,7 +20,8 @@ import java.net.Socket; //for sockets
 public class PaymentWorker extends Thread {
     //GLOBAL VARIABLES
     private Socket socket; //the socket to read from
-    Database database = new Database("payments.txt"); //the database to use
+    private Logger logger = Logger.getInstance(); //Initialize the logger
+
 
     /* Name: PaymentWorker
      * Description: The constructor for the PaymentWorker class.
@@ -42,7 +43,6 @@ public class PaymentWorker extends Thread {
      * Parameters: none
      */
     public void run() {
-        Logger logger = Logger.getInstance(); //Initialize the logger
 
         try{ //Try to read the request
             HTMLParser parser = new HTMLParser("payment-html/",socket); //Initialize the parser

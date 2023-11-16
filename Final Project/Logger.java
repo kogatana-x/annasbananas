@@ -21,7 +21,7 @@ public class Logger {
     //GLOBAL VARIABLES
     private static Logger instance; //The instance of the logger
     private static String directory="logs/"; //The directory to store the logs
-    Database logDatabase; //The database to store the logs
+    private Database logDatabase; //The database to store the logs
 
     private Logger(){}
 
