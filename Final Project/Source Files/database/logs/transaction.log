@@ -1,0 +1,4 @@
+2023/11/16 15:48:27 checkout from 0:0:0:0:0:0:0:1:46756 caused transaction: attempt success for cart 1
+2023/11/16 15:57:24 checkout from 127.0.0.1:47407 caused transaction: attempt success for cart 2
+2023/11/16 15:57:37 checkout from 127.0.0.1:47472 caused transaction: attempt success with address 
+2023/11/16 15:58:21 payment from 127.0.0.1:47504 caused transaction:  for user  with card number ending in 3456

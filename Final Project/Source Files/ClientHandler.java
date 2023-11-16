@@ -179,6 +179,7 @@ public class ClientHandler extends Thread {
                 String productId = ""; //the product id to add to the cart
                 String quantity=""; //the quantity of the product to add to the cart
                 method="GET"; //the method to use for the response
+                System.out.println("In /addToCart");
                 if(cookie.equals("")){ //If the user is not logged in
                     //NEED TO BE LOGGED IN: 
                     path="/products.html?showAlert=true"; //redirect the user to products.html with an alert
@@ -186,6 +187,8 @@ public class ClientHandler extends Thread {
                 }
                 else{ //If the user is logged in
                     //Get the values from the request
+                    System.out.println("Getting Values /addToCart");
+
                     for (int x=0;x<parser.values.size();x++) {
                         if (parser.values.get(x)==null){break;} //If there are no more values, break
                         else if (parser.values.get(x).equals("productId")) { //If the value is the product id
@@ -198,9 +201,11 @@ public class ClientHandler extends Thread {
                         }
                     }
                 }
-                filename="/products.html"; //redirect the user to products.html
+                //filename="/products.html"; //redirect the user to products.html
+                //body=parser.readImage(filename); //prepare the response
+                path="/products.html";
                 cart=cart.addItem(productId, quantity); //prepare the response
-                //System.out.println("Add to cart attempt "+rez+" from " + username +" "+ getSourceInfo(socket) + " with productId " + productId+" and quantity "+quantity);
+                System.out.println("Add to cart attempt from " + username +" "+ getSourceInfo(socket) + " with productId " + productId+" and quantity "+quantity);
             }      
             //THE REQUEST RECIEVED ORIGINATES FROM cart.html - IF CHECKOUT BUTTON IS PRESSED
             else if(method.equals("POST")&&path.equals("/checkout")){  

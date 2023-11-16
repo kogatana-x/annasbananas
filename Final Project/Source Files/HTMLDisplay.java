@@ -70,14 +70,14 @@ public class HTMLDisplay {
                         html.append("<form action='/updateCart' method='post'>");
                         html.append("<input type='hidden' name='productId' value='").append(product.getId()).append("'>");
                         html.append("<label for=quantity style=\"display: block; margin-bottom: 10px;\">Quantity:</label>");
-                        html.append("<input type='number' id='quantity' name='quantity' min='0' max='999' value="+product.getQuantity() +" style='width: 10%; padding: 5px; margin: 5px; border-radius: 5px;'>");                html.append("<input type='hidden' name='productId' value='").append(product.getId()).append("'>");
+                        html.append("<input type='number' id='quantity' name='quantity' min='0' max='999' value="+product.getQuantity() +" style='width: 15%; padding: 5px; margin: 5px; border-radius: 5px;'>");                html.append("<input type='hidden' name='productId' value='").append(product.getId()).append("'>");
                         html.append("<input class='update-cart' data-product-id="+product.getId()+" type='submit' value='Update Item'>");
                         html.append("</form>");
                     html.append("</div>");
                     html.append("<div class=\"cart-item-price\">");
-                        html.append("<p>Unit Price: $").append(product.getPrice()).append("</p>");
+                        html.append("<p>Unit Price: $").append(String.format("%.2f", product.getPrice())).append("</p>");
                         double subTotal=product.getPrice()*product.getQuantity();
-                        html.append("<p>Sub Total: $").append(subTotal).append("</p>");
+                        html.append("<p>Sub Total: $").append(String.format("%.2f", subTotal)).append("</p>");
                     html.append("</div>");
                 html.append("</div>");
                 total+=subTotal; //Add the subtotal to the total
@@ -85,7 +85,7 @@ public class HTMLDisplay {
         }
         //Generate the HTML for the total
         html.append("<div class=total>");
-            html.append("<h2>Order Total: $").append(total).append("</h2>");
+            html.append("<h2>Order Total: $").append(String.format("%.2f", total)).append("</h2>");
         html.append("</div>");
         html.append("</div>");
         return html;
