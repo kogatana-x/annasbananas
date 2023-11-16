@@ -67,7 +67,7 @@ public class HTMLDisplay {
                         html.append("<form action='/updateCart' method='post'>");
                         html.append("<input type='hidden' name='productId' value='").append(product.getId()).append("'>");
                         html.append("<label for=quantity style=\"display: block; margin-bottom: 10px;\">Quantity:</label>");
-                        html.append("<input type='number' id='quantity' name='quantity' min='1' max='999' value="+product.getQuantity() +" style='width: 10%; padding: 5px; margin: 5px; border-radius: 5px;'>");                html.append("<input type='hidden' name='productId' value='").append(product.getId()).append("'>");
+                        html.append("<input type='number' id='quantity' name='quantity' min='0' max='999' value="+product.getQuantity() +" style='width: 10%; padding: 5px; margin: 5px; border-radius: 5px;'>");                html.append("<input type='hidden' name='productId' value='").append(product.getId()).append("'>");
                         html.append("<input class='update-cart' data-product-id="+product.getId()+" type='submit' value='Update Item'>");
                         html.append("</form>");
                     html.append("</div>");
