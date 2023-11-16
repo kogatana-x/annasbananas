@@ -8,16 +8,18 @@
 
 ## Running the Server
 ### Download the Server Backend 
-Option 1: Use the Executable: 
-[ExecutableDownload]("Final Project/BananaServer.exe")
+**Option 1:** Use the Executable: 
+[ExecutableDownload](https://github.com/kogatana-x/SE450/blob/Final/Final%20Project/BananaServer.exe)
 
-Option 2: Use the .jar file:
-[JarDownload]("Final Project/BananaServer.jar")
+**Option 2:** Use the .jar file:
+[JarDownload](https://github.com/kogatana-x/SE450/blob/Final/Final%20Project/BananaServer.jar")
 
-Option 3: Compile from source:
-Download: [JarDownload]("Final Project/Source Files")
+**Option 3:** Compile from source:
+Download: [JarDownload](https://github.com/kogatana-x/SE450/blob/Final/Final%20Project/Source%20Files/)
+
 Compile:
 `javac BananaServer.java`
+
 Execute:
 `java BananaServer`
 
