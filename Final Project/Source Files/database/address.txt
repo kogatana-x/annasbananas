@@ -1,3 +1,2 @@
 username, street1, street2, city, state, zip, countrytest
 test,street1,street2,city,IL,60605,USA
-Anna,,123,Chicago,IL,60605,USA
