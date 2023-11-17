@@ -27,16 +27,20 @@ Execute:
 Ensure that the backend program is located in the same directory as the html/, payment-html/ and database/ folders.
 
 ## Accessing the Site
-From a browser such as Firefox or Microsoft Edge, navigate to:
+From a browser such as Firefox, navigate to:
 > http://localhost:8080
 
-Note: I only tested the site from Firefox and Edge, so there may be issues with other browser clients. 
+Note: I only tested the site from Firefox, so there may be issues with other browser clients. There is an occasional cookie bug when using Microsoft Edge
 
 ## Instructions for Use
 The site can be used without any prior knowledge of how it works. Input and button clicks are sanitized and the users are notified if they did something wrong.
 
 Note: the cart functionality is not available until the user has logged in.
 
+## Known Issues
+If your local network uses/supports IPv6 and IPv4, the payment server may encounter a redirect issue to and from the server - browser will throw a network protocol error. (Navigate to http://localhost:8081/payments.html, submit the form and navigate back to http://localhost:8080/finished-registration.html) to complete the process. 
+
+Once checked out, the cart state is not wiped. 
 
 
 ## Design Requirements
