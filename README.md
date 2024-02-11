@@ -1,5 +1,5 @@
 # Anna's Bananas eCommerce Site
-## Anna Andler | kogatana-x
+Anna Andler | kogatana-x
 
 ## Project Description
 *"A simplified yet comprehensive shopping system. This system will allow customers to browse products, add items to their shopping cart, place orders, and even simulate the payment process."*
