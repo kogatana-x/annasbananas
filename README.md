@@ -1,6 +1,5 @@
 # Anna's Bananas eCommerce Site
-## SE 450 Final Project
-### Anna Andler | 11/15/2023
+## Anna Andler | kogatana-x
 
 ## Project Description
 *"A simplified yet comprehensive shopping system. This system will allow customers to browse products, add items to their shopping cart, place orders, and even simulate the payment process."*
@@ -82,7 +81,7 @@ The UML Diagrams and Database Architecture for this project are accessible in th
 [Link](https://youtu.be/fJ5fa7j7g4Y)
 
 ## Acknowledgements.
-Anna's Bananas is a fake company I made up a few years ago to build training exercises for my cybersecurity team.  I designed the logo myself; however, all other product images used in the site belong to their rightful owners. 
+Anna's Bananas is a fake company I made up a few years ago to build training exercises for my cybersecurity team.  I designed the logo myself; however, all other product images used in the site belong to their rightful owners. This program was made as a final project for Object Oriented Programming (SE450)
 
 
 ## JUnit Tests
